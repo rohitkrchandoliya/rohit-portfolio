@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import {
   ArrowDown, ArrowDownRight, ArrowRight, ArrowUpRight, Check, Code2,
-  Command, Github, Layers3, Menu, ShieldCheck, Sparkles, X, Zap,
+  Command, Github, Layers3, Menu, ShieldCheck, Sparkles, X,
 } from 'lucide-react'
 
 type Project = {
