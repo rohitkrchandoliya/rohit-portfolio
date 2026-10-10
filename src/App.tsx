@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import {
-  ArrowDown, ArrowRight, ArrowUpRight, Award, BriefcaseBusiness, Check,
-  ChevronLeft, ChevronRight, Code2, Download, ExternalLink, Github, Globe2,
-  Mail, MapPin, Play, ShieldCheck, Sparkles, X, Zap, Phone, Linkedin,
+  ArrowDown, ArrowRight, ArrowUpRight, Award, BookOpen, Check,
+  ChevronLeft, ChevronRight, Code2, ExternalLink, Github, Globe2,
+  Mail, Play, ShieldCheck, Sparkles, X, Zap, Phone, Linkedin,
 } from 'lucide-react'
 
 type Project = {
@@ -158,5 +158,5 @@ function App() {
     </div>
   )
 }
-function BookIcon() { return <Award size={18} /> }
+function BookIcon() { return <BookOpen size={18} /> }
 export default App
