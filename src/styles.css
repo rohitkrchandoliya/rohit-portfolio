@@ -236,3 +236,14 @@
 .hero-art-profile>*{opacity:1}
 @media(max-width:900px){.hero-art-profile{background-image:none!important;opacity:1}.hero-art-profile>*{display:initial;opacity:1}}
 @media(max-width:560px){.hero-art-profile{background-image:none!important;opacity:1}}
+
+/* Use the uploaded cinematic workspace scene as the real hero image. */
+.series-hero{position:relative;isolation:isolate;overflow:hidden}
+.series-hero .hero-art-profile{position:absolute;z-index:1;top:13%;right:0;bottom:4%;left:37%;width:auto;height:auto;max-width:none;min-height:0;background-image:linear-gradient(90deg,#08080b 0%,rgba(8,8,11,.70) 10%,rgba(8,8,11,.06) 40%,rgba(8,8,11,.02) 100%),url('/images/portfolio-hero.webp');background-size:cover;background-position:center;background-repeat:no-repeat;border:0;box-shadow:none;opacity:1;pointer-events:none}
+.series-hero .hero-art-profile>*{display:none!important}
+.series-hero .hero-content{position:relative;z-index:3;width:min(48%,680px)}
+.series-hero .hero-backdrop,.series-hero .hero-vignette{z-index:0}
+.series-hero .hero-vertical-label{z-index:2}
+.series-hero .hero-scroll,.series-hero .hero-fade{z-index:3}
+@media(max-width:900px){.series-hero .hero-art-profile{left:25%;top:18%;bottom:0;background-position:58% center;opacity:.78}.series-hero .hero-content{width:min(70%,680px)}}
+@media(max-width:600px){.series-hero .hero-art-profile{left:0;top:30%;bottom:0;background-position:61% center;opacity:.36}.series-hero .hero-content{width:100%}}
