@@ -1,249 +1,202 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import {
-  ArrowDown, ArrowDownRight, ArrowRight, ArrowUpRight, Check, Code2,
-  Command, Github, Layers3, Menu, ShieldCheck, Sparkles, X,
+  ArrowDown, ArrowRight, ArrowUpRight, Check, ChevronLeft, ChevronRight,
+  Code2, Github, Play, ShieldCheck, Sparkles, X, Zap,
 } from 'lucide-react'
 
 type Project = {
-  number: string
+  id: string
   title: string
   category: string
   status: string
-  summary: string
+  synopsis: string
   detail: string
-  stack: string[]
-  tone: string
+  tags: string[]
+  palette: string
+  symbol: string
 }
 
 const projects: Project[] = [
   {
-    number: '01',
-    title: 'AI Desktop Assistant',
-    category: 'AI / AUTOMATION',
-    status: 'In development',
-    summary: 'A desktop companion concept focused on voice and text commands, everyday workflows, and productivity automation.',
-    detail: 'The goal is to bring common desktop actions into one assistant experience: interpret a command, select an appropriate action, and make the result clear to the user. The next step is to document the implemented capabilities and add a verifiable demo.',
-    stack: ['Python', 'AI / NLP', 'Automation'],
-    tone: 'violet',
+    id: '01', title: 'AI Desktop Assistant', category: 'AI · AUTOMATION',
+    status: 'IN DEVELOPMENT', synopsis: 'A smarter layer between everyday tasks and the tools you use.',
+    detail: 'An assistant concept exploring voice and text commands, useful desktop actions, and practical workflow automation. The portfolio will only claim capabilities that can be demonstrated in the repository.',
+    tags: ['Python', 'AI / NLP', 'Automation'], palette: 'ember', symbol: 'AI',
   },
   {
-    number: '02',
-    title: 'AI Security Assistant',
-    category: 'CYBERSECURITY',
-    status: 'Research project',
-    summary: 'An AI-assisted workflow for web security research and bug-hunting support, designed around responsible testing.',
-    detail: 'This project explores how AI can help organize findings, explain security signals, and support a repeatable research workflow. Testing should only be performed on systems where permission has been granted.',
-    stack: ['AI', 'Web Security', 'Research'],
-    tone: 'red',
+    id: '02', title: 'AI Security Assistant', category: 'CYBERSECURITY',
+    status: 'RESEARCH PROJECT', synopsis: 'Making security research more structured, explainable, and repeatable.',
+    detail: 'An AI-assisted research workflow for organizing security signals and supporting responsible bug-hunting. Testing is limited to authorized systems and permitted environments.',
+    tags: ['AI', 'AppSec', 'Research'], palette: 'crimson', symbol: 'SEC',
   },
   {
-    number: '03',
-    title: 'Secure Web Application',
-    category: 'APPSEC',
-    status: 'Security-focused build',
-    summary: 'A web application project centered on defensive handling of common injection risks, including XSS and SQL injection.',
-    detail: 'The portfolio will be updated with implementation notes, validation steps, and repository links once the relevant code and tests have been reviewed.',
-    stack: ['Web Development', 'XSS', 'SQL Injection'],
-    tone: 'blue',
+    id: '03', title: 'Secure Web Application', category: 'APPLICATION SECURITY',
+    status: 'BUILD / HARDEN', synopsis: 'Defensive engineering against common web application risks.',
+    detail: 'A security-focused application track covering safer input handling and defenses against risks such as XSS and SQL injection. Implementation details and test evidence will be linked after repository verification.',
+    tags: ['Web', 'XSS', 'SQL injection'], palette: 'ice', symbol: '{ }',
   },
   {
-    number: '04',
-    title: 'CTFverse',
-    category: 'CYBERSECURITY EDUCATION',
-    status: 'Platform project',
-    summary: 'A cybersecurity learning-platform concept built around hands-on challenges and practical skill development.',
-    detail: 'The intended experience makes security practice approachable through structured challenges. A public walkthrough and live demo can be added after the current repository and deployment are verified.',
-    stack: ['Web Development', 'CTF', 'Learning'],
-    tone: 'green',
+    id: '04', title: 'CTFverse', category: 'SECURITY LEARNING',
+    status: 'PLATFORM PROJECT', synopsis: 'A hands-on learning universe for curious security minds.',
+    detail: 'A cybersecurity learning-platform concept centered on practical challenges and structured skill-building. A verified demo and walkthrough can be added when the current build is ready.',
+    tags: ['CTF', 'Web development', 'Learning'], palette: 'violet', symbol: 'CTF',
   },
   {
-    number: '05',
-    title: 'YouTube Automation System',
-    category: 'CREATOR TOOLS',
-    status: 'In progress',
-    summary: 'A workflow project exploring how repeatable content-production tasks can be organized and automated.',
-    detail: 'The focus is a reliable workflow with clear review points, rather than publishing unchecked content. Current implementation status and integrations will be documented as they are verified.',
-    stack: ['Automation', 'Content Workflow', 'AI'],
-    tone: 'orange',
+    id: '05', title: 'YouTube Automation', category: 'CREATOR SYSTEMS',
+    status: 'IN PROGRESS', synopsis: 'Turning repeatable content tasks into a more reliable workflow.',
+    detail: 'A workflow project exploring how content-production steps can be organized and automated with human review points. Current integrations and shipped features will be documented as they are verified.',
+    tags: ['Automation', 'AI', 'Content'], palette: 'gold', symbol: '▶',
   },
   {
-    number: '06',
-    title: 'Bug Bounty Research Lab',
-    category: 'CHEAKSTAR · R&D',
-    status: 'Research lab',
-    summary: 'An in-house research track for practicing web security analysis, documenting findings, and improving testing discipline.',
-    detail: 'Research is intended for authorized environments, controlled labs, and programs whose rules explicitly permit testing. Individual findings and outcomes will be published only when safe and appropriate.',
-    stack: ['Security Research', 'Testing', 'Documentation'],
-    tone: 'silver',
+    id: '06', title: 'Bug Bounty Research Lab', category: 'CHEAKSTAR · R&D',
+    status: 'RESEARCH TRACK', synopsis: 'A disciplined space for testing, learning, and documenting findings.',
+    detail: 'A research track for practicing web security analysis and improving testing discipline in authorized environments, controlled labs, and programs that explicitly permit testing.',
+    tags: ['Security research', 'Testing', 'Documentation'], palette: 'mint', symbol: 'LAB',
   },
 ]
 
 const skills = [
-  { name: 'AI & Automation', note: 'Assistants · Workflow design', icon: Sparkles },
-  { name: 'Web Development', note: 'Frontend · Application building', icon: Code2 },
-  { name: 'Cybersecurity', note: 'AppSec · Authorized testing', icon: ShieldCheck },
-  { name: 'Product Thinking', note: 'Research · Iteration · Delivery', icon: Layers3 },
+  { title: 'AI & Automation', text: 'Assistants · Workflows · Practical tools', icon: Sparkles },
+  { title: 'Software Building', text: 'Web experiences · Product iteration', icon: Code2 },
+  { title: 'Cybersecurity', text: 'Application security · Authorized testing', icon: ShieldCheck },
+  { title: 'Execution Mindset', text: 'Research · Testing · Documentation', icon: Zap },
 ]
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 22 },
-  visible: { opacity: 1, y: 0 },
-}
-
 function App() {
+  const [intro, setIntro] = useState(true)
   const [selected, setSelected] = useState<Project | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const reduceMotion = useReducedMotion()
-  const motionProps = reduceMotion
-    ? {}
-    : { initial: 'hidden', whileInView: 'visible', viewport: { once: true, amount: 0.16 }, variants: fadeUp, transition: { duration: 0.55 } }
+  const rails = useRef<Record<string, HTMLDivElement | null>>({})
 
+  useEffect(() => {
+    if (reduceMotion) setIntro(false)
+    const timer = window.setTimeout(() => setIntro(false), reduceMotion ? 0 : 3800)
+    return () => window.clearTimeout(timer)
+  }, [reduceMotion])
+
+  useEffect(() => {
+    if (!selected) return
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setSelected(null)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      document.body.style.overflow = ''
+    }
+  }, [selected])
+
+  const scrollRail = (id: string, direction: number) => {
+    rails.current[id]?.scrollBy({ left: direction * 420, behavior: 'smooth' })
+  }
   const closeMenu = () => setMenuOpen(false)
 
   return (
-    <div className="site-shell">
-      <div className="grain" aria-hidden="true" />
-      <header className="topbar">
-        <a className="wordmark" href="#home" aria-label="Rohit home" onClick={closeMenu}>
-          <span className="mark">R<span>.</span></span>
-          <span className="wordmark-text">ROHIT <small>THE BUILDER</small></span>
-        </a>
-        <nav className={menuOpen ? 'nav-links nav-open' : 'nav-links'} aria-label="Main navigation">
-          <a href="#work" onClick={closeMenu}>Selected work</a>
-          <a href="#about" onClick={closeMenu}>About</a>
-          <a href="#skills" onClick={closeMenu}>Capabilities</a>
-          <a className="nav-contact" href="#contact" onClick={closeMenu}>Let’s talk <ArrowUpRight size={14} /></a>
+    <div className="series-site">
+      <div className="film-grain" aria-hidden="true" />
+      <AnimatePresence>
+        {intro && (
+          <motion.div className="opening" key="opening" initial={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.04, filter: 'blur(12px)' }} transition={{ duration: 0.8 }}>
+            <div className="opening-light" />
+            <motion.p className="opening-studio" initial={{ opacity: 0, letterSpacing: '0.9em' }} animate={{ opacity: 1, letterSpacing: '0.42em' }} transition={{ duration: 1.2 }}>AN INDEPENDENT BUILDER PRESENTS</motion.p>
+            <motion.div className="opening-title" initial={{ opacity: 0, y: 24, scale: 1.12 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: 0.35, duration: 1.1 }}>
+              <span>ROHIT</span><b>THE BUILDER</b>
+            </motion.div>
+            <motion.p className="opening-caption" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.15 }}>AI · SOFTWARE · CYBERSECURITY</motion.p>
+            <button className="opening-play" onClick={() => setIntro(false)}><Play size={16} fill="currentColor" /> ENTER EXPERIENCE <span>↗</span></button>
+            <button className="skip-intro" onClick={() => setIntro(false)}>SKIP INTRO</button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <header className="series-nav">
+        <a className="series-brand" href="#home" onClick={closeMenu}><span className="brand-n">R<span>.</span></span><span className="brand-words">ROHIT <small>THE BUILDER</small></span></a>
+        <button className="mobile-menu" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle navigation">{menuOpen ? <X /> : <span>☰</span>}</button>
+        <nav className={menuOpen ? 'series-links is-open' : 'series-links'} aria-label="Main navigation">
+          <a href="#home" onClick={closeMenu}>Home</a><a href="#continue" onClick={closeMenu}>Explore</a><a href="#originals" onClick={closeMenu}>Originals</a><a href="#about" onClick={closeMenu}>My story</a>
+          <a className="nav-connect" href="#contact" onClick={closeMenu}>Let’s connect <ArrowUpRight size={14} /></a>
         </nav>
-        <button className="menu-toggle" aria-label={menuOpen ? 'Close menu' : 'Open menu'} onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? <X size={21} /> : <Menu size={21} />}
-        </button>
       </header>
 
       <main>
-        <section className="hero" id="home">
-          <div className="hero-grid" aria-hidden="true" />
-          <motion.div className="hero-copy" initial={reduceMotion ? false : { opacity: 0, y: 24 }} animate={reduceMotion ? {} : { opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <div className="eyebrow"><span className="status-dot" /> ENGINEERING · AI · SECURITY</div>
-            <h1>Ideas are<br />cheap. <em>Build</em><br />the thing.</h1>
-            <p className="hero-subtitle">I’m Rohit Kumar Chandoliya — an engineer-in-the-making building at the intersection of AI, software, and cybersecurity.</p>
-            <div className="hero-actions">
-              <a className="button button-primary" href="#work">Explore my work <ArrowDownRight size={17} /></a>
-              <a className="button button-quiet" href="https://github.com/rohitkrchandoliya" target="_blank" rel="noreferrer"><Github size={17} /> GitHub profile <ArrowUpRight size={14} /></a>
+        <section className="series-hero" id="home">
+          <div className="hero-backdrop" />
+          <div className="hero-vignette" />
+          <div className="hero-ambient hero-ambient-one" /><div className="hero-ambient hero-ambient-two" />
+          <div className="hero-vertical-label">A WORK IN PROGRESS · ALWAYS BUILDING</div>
+          <motion.div className="hero-content" initial={reduceMotion ? false : { opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: intro ? 3.3 : 0.15 }}>
+            <div className="series-kicker"><span className="live-dot" /> THE STORY SO FAR <span className="kicker-line" /> SEASON 01</div>
+            <div className="hero-series-mark"><span>R</span><b>ORIGINAL SERIES</b></div>
+            <h1>Curiosity<br />in <em>production.</em></h1>
+            <p className="hero-description">I’m Rohit Kumar Chandoliya — building at the intersection of AI, software, and cybersecurity. This is where the experiments, ideas, and projects take shape.</p>
+            <div className="hero-meta"><span className="meta-match">98% MATCH</span><span>2026</span><span className="meta-rating">BUILD · LEARN · REPEAT</span><span>6 PROJECTS</span></div>
+            <div className="hero-buttons">
+              <a className="hero-play" href="#continue"><Play size={18} fill="currentColor" /> Explore my work</a>
+              <a className="hero-more" href="#about"><span>i</span> More about me</a>
             </div>
-            <div className="hero-footnote"><span>JAIPUR, INDIA</span><span className="footnote-line" /><span>CURIOUS BY DEFAULT</span></div>
+            <div className="hero-foot">JAIPUR, INDIA <span /> OPEN TO OPPORTUNITIES</div>
           </motion.div>
-          <motion.div className="hero-art" initial={reduceMotion ? false : { opacity: 0, scale: 0.96 }} animate={reduceMotion ? {} : { opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.15 }}>
-            <div className="orbit orbit-one" />
-            <div className="orbit orbit-two" />
-            <div className="art-cross cross-a">+</div><div className="art-cross cross-b">+</div>
-            <div className="art-label label-top">SYSTEMS / 001</div>
-            <div className="monolith">
-              <div className="monolith-top" />
-              <div className="monolith-face"><span>R</span><i /></div>
-              <div className="monolith-side" />
-            </div>
-            <div className="art-code"><span>01</span> BUILD / TEST / LEARN</div>
-            <div className="art-label label-bottom">ALWAYS IN PROGRESS</div>
-          </motion.div>
-          <a className="scroll-cue" href="#work"><span>SCROLL TO EXPLORE</span><ArrowDown size={14} /></a>
+          <div className="hero-art" aria-hidden="true">
+            <div className="hero-art-ring ring-a" /><div className="hero-art-ring ring-b" />
+            <div className="hero-monogram">R<span>.</span></div>
+            <div className="hero-art-caption caption-a">IDEAS → SYSTEMS</div><div className="hero-art-caption caption-b">DESIGNED TO EVOLVE</div>
+            <div className="hero-art-chip chip-a"><span className="chip-dot" /> BUILD MODE <b>ACTIVE</b></div>
+            <div className="hero-art-chip chip-b"><Code2 size={15} /> THINK / MAKE / TEST</div>
+          </div>
+          <a className="hero-scroll" href="#continue"><span>SCROLL TO EXPLORE</span><ArrowDown size={13} /></a>
+          <div className="hero-fade" />
         </section>
 
-        <section className="ticker" aria-label="Areas of interest">
-          <div className="ticker-track">
-            {['BUILD WITH INTENT', 'AI & AUTOMATION', 'SECURITY MINDED', 'SHIP. LEARN. REPEAT.', 'BUILD WITH INTENT', 'AI & AUTOMATION', 'SECURITY MINDED', 'SHIP. LEARN. REPEAT.'].map((item, i) => (
-              <span key={i}>{item}<b>✳</b></span>
-            ))}
+        <section className="continue-section" id="continue">
+          <div className="rail-heading"><div><span className="rail-eyebrow">YOUR NEXT EPISODE</span><h2>Continue exploring</h2></div><div className="rail-controls"><button onClick={() => scrollRail('explore', -1)} aria-label="Scroll left"><ChevronLeft /></button><button onClick={() => scrollRail('explore', 1)} aria-label="Scroll right"><ChevronRight /></button></div></div>
+          <div className="poster-rail explore-rail" ref={el => { rails.current.explore = el }}>
+            {[
+              { no: '01', title: 'The Builder', sub: 'A little about me', target: '#about', palette: 'poster-about', glyph: 'R' },
+              { no: '02', title: 'The Originals', sub: 'Projects in progress', target: '#originals', palette: 'poster-originals', glyph: '01' },
+              { no: '03', title: 'The Toolkit', sub: 'Skills & capabilities', target: '#skills', palette: 'poster-skills', glyph: '{ }' },
+              { no: '04', title: 'The Next Chapter', sub: 'Let’s build something', target: '#contact', palette: 'poster-contact', glyph: '↗' },
+            ].map(item => <a href={item.target} className="explore-card" key={item.no}><div className={'explore-art ' + item.palette}><span className="explore-glyph">{item.glyph}</span><span className="explore-no">CHAPTER {item.no}</span><span className="explore-play"><Play size={16} fill="currentColor" /></span></div><strong>{item.title}</strong><span>{item.sub}</span></a>)}
           </div>
         </section>
 
-        <section className="section work-section" id="work">
-          <motion.div className="section-heading" {...motionProps}>
-            <div><span className="section-index">01 / SELECTED WORK</span><h2>Curiosity, <em>in motion.</em></h2></div>
-            <p>A growing collection of builds, experiments, and research tracks. Project status is labeled honestly; verified demos and repositories will be linked as they’re ready.</p>
-          </motion.div>
-          <div className="project-grid">
-            {projects.map((project, index) => (
-              <motion.button className={`project-card tone-${project.tone}`} key={project.number} onClick={() => setSelected(project)} aria-label={`View details for ${project.title}`} {...motionProps} transition={{ duration: 0.45, delay: index % 3 * 0.08 }}>
-                <div className="project-visual">
-                  <div className="visual-noise" />
-                  {project.number === '01' && <div className="visual-assistant"><Command size={40} strokeWidth={1.1} /><span>LISTENING<span className="blink">_</span></span><div className="sound-bars">{Array.from({ length: 15 }, (_, i) => <i key={i} style={{ height: `${12 + (i * 17 % 42)}px` }} />)}</div></div>}
-                  {project.number === '02' && <div className="visual-shield"><ShieldCheck size={80} strokeWidth={0.8} /><span>DEFEND / ANALYZE</span></div>}
-                  {project.number === '03' && <div className="visual-terminal"><span>~/secure-app</span><p><b>$</b> validate_input()</p><p><b>$</b> encode_output()</p><p className="terminal-ok">✓ defensive checks</p></div>}
-                  {project.number === '04' && <div className="visual-ctf"><span>CTF<span>VERSE</span></span><div className="ctf-grid">{Array.from({ length: 9 }, (_, i) => <i key={i}>{['⌘', '⌁', '⌖', '01', '∴', '⌬', '∆', '∿', '↗'][i]}</i>)}</div></div>}
-                  {project.number === '05' && <div className="visual-play"><div className="play-circle">▶</div><div className="play-wave"><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /></div><span>CREATE / REVIEW / PUBLISH</span></div>}
-                  {project.number === '06' && <div className="visual-lab"><div className="lab-ring"><span>LAB</span></div><div className="lab-cross">+</div><span className="lab-label">AUTHORIZED RESEARCH ONLY</span></div>}
-                  <span className="project-number">{project.number}</span>
-                  <span className="project-open"><ArrowUpRight size={18} /></span>
-                </div>
-                <div className="project-info">
-                  <div className="project-meta"><span>{project.category}</span><span className="project-status">{project.status}</span></div>
-                  <h3>{project.title}</h3>
-                  <p>{project.summary}</p>
-                  <div className="project-bottom"><span>VIEW CASE NOTES</span><ArrowRight size={15} /></div>
-                </div>
-              </motion.button>
-            ))}
+        <section className="originals-section" id="originals">
+          <div className="section-topline"><span className="red-dash" /> ROHIT’S ORIGINALS <span className="topline-season">SEASON 01 · PROJECT FILES</span></div>
+          <div className="originals-title-row"><div><h2>Built, tested<br />and <em>in the making.</em></h2><p>Every project has a story. Pick an episode to see the idea, the focus, and what’s next.</p></div><div className="rail-controls originals-controls"><button onClick={() => scrollRail('projects', -1)} aria-label="Scroll projects left"><ChevronLeft /></button><button onClick={() => scrollRail('projects', 1)} aria-label="Scroll projects right"><ChevronRight /></button></div></div>
+          <div className="poster-rail project-rail" ref={el => { rails.current.projects = el }}>
+            {projects.map((project, index) => <motion.button type="button" key={project.id} className="project-poster" onClick={() => setSelected(project)} initial={reduceMotion ? false : { opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: 0.55, delay: index * 0.06 }}>
+              <div className={'poster-art poster-' + project.palette}><div className="poster-topline"><span>R ORIGINAL</span><span>EP. {project.id}</span></div><div className="poster-halo" /><span className="poster-symbol">{project.symbol}</span><div className="poster-art-title"><span>{project.category}</span><strong>{project.title}</strong></div><span className="poster-play"><Play size={19} fill="currentColor" /></span><span className="poster-corner">{project.id}</span></div>
+              <div className="poster-info"><div className="poster-info-top"><span className="poster-match">NEW EPISODE</span><span>{project.status}</span></div><h3>{project.title}</h3><p>{project.synopsis}</p><div className="poster-tags">{project.tags.slice(0, 3).map(tag => <span key={tag}>{tag}</span>)}</div><div className="poster-view">VIEW EPISODE <ArrowUpRight size={14} /></div></div>
+            </motion.button>)}
           </div>
+          <div className="rail-bottom-note"><span>R / ORIGINALS</span><span>HONEST PROGRESS. REAL BUILDS. MORE TO COME.</span></div>
         </section>
 
-        <section className="about-section" id="about">
-          <div className="about-stamp"><span>MADE TO</span><strong>FIGURE<br />IT OUT.</strong><span>NOT TO STAND STILL ↗</span></div>
-          <motion.div className="about-copy" {...motionProps}>
-            <span className="section-index">02 / THE PERSON BEHIND THE BUILDS</span>
-            <h2>Learn fast.<br />Think clearly.<br /><em>Make it real.</em></h2>
-            <p>I’m Rohit, an engineering student and builder interested in turning complex ideas into practical tools. My work spans AI-assisted workflows, software development, and defensive security research.</p>
-            <p>I value honest progress, readable systems, and learning by making. I’m looking for opportunities where I can contribute, get challenged, and ship useful work with a team.</p>
-            <a className="text-link" href="https://github.com/rohitkrchandoliya" target="_blank" rel="noreferrer">More on GitHub <ArrowUpRight size={15} /></a>
-          </motion.div>
+        <section className="featured-section">
+          <div className="featured-visual"><div className="featured-grid" /><div className="featured-orb" /><span className="featured-index">FEATURED STORY / 001</span><div className="featured-bigmark">BUILD<span>.</span></div><div className="featured-side-note">CURIOSITY IS THE ENGINE</div></div>
+          <div className="featured-copy"><span className="section-eyebrow">THE CREATOR BEHIND THE CREDITS</span><h2>Not just ideas.<br /><em>Follow-through.</em></h2><p>I’m interested in turning complex ideas into practical tools — from AI-assisted workflows to software and defensive security research. The work is evolving, and I’m committed to showing the process honestly.</p><a href="#about" className="inline-cta">Discover my story <ArrowRight size={16} /></a><div className="featured-stats"><div><strong>AI</strong><span>EXPERIMENTS</span></div><div><strong>DEV</strong><span>BUILDING</span></div><div><strong>SEC</strong><span>RESEARCH</span></div></div></div>
         </section>
 
-        <section className="section skills-section" id="skills">
-          <motion.div className="section-heading" {...motionProps}>
-            <div><span className="section-index">03 / CAPABILITIES</span><h2>Built on <em>curiosity.</em></h2></div>
-            <p>A practical mix of interests that guide the projects I choose and the problems I want to solve.</p>
-          </motion.div>
-          <div className="skills-grid">
-            {skills.map((skill, i) => {
-              const Icon = skill.icon
-              return <motion.div className="skill-card" key={skill.name} {...motionProps} transition={{ duration: 0.45, delay: i * 0.07 }}>
-                <div className="skill-top"><span>0{i + 1}</span><Icon size={22} strokeWidth={1.5} /></div>
-                <h3>{skill.name}</h3><p>{skill.note}</p><div className="skill-line" />
-              </motion.div>
-            })}
-          </div>
-          <div className="principles"><span><Check size={15} /> Document the work</span><span><Check size={15} /> Test the assumptions</span><span><Check size={15} /> Respect the boundaries</span><span><Check size={15} /> Keep improving</span></div>
+        <section className="story-section" id="about">
+          <div className="story-art"><div className="story-art-ring" /><span className="story-letter">R</span><span className="story-signature">STAY CURIOUS. KEEP BUILDING.</span><span className="story-stamp">THE<br />BUILDER<br /><b>EST. 2026</b></span></div>
+          <div className="story-copy"><span className="section-eyebrow">CHAPTER 01 · THE PERSON</span><h2>Learning by<br /><em>making things.</em></h2><p>I’m Rohit Kumar Chandoliya, an engineering student and builder interested in AI, software development, and cybersecurity.</p><p>I value practical learning, clear documentation, and systems that can be tested and improved. I’m looking for opportunities where I can contribute, learn from strong teams, and build useful things.</p><a className="inline-cta" href="https://github.com/rohitkrchandoliya" target="_blank" rel="noreferrer">Explore my GitHub <ArrowUpRight size={16} /></a></div>
         </section>
 
-        <section className="contact-section" id="contact">
-          <div className="contact-orb" aria-hidden="true" />
-          <motion.div className="contact-inner" {...motionProps}>
-            <span className="section-index">04 / NEXT CHAPTER</span>
-            <h2>Got a problem<br />worth <em>solving?</em></h2>
-            <p>I’m open to relevant internships, entry-level opportunities, collaborations, and freelance projects where thoughtful engineering makes a difference.</p>
-            <a className="button button-primary" href="https://github.com/rohitkrchandoliya" target="_blank" rel="noreferrer">Connect on GitHub <ArrowUpRight size={16} /></a>
-            <div className="contact-note"><span className="status-dot" /> OPEN TO THE RIGHT OPPORTUNITY</div>
-          </motion.div>
-        </section>
+        <section className="skills-section" id="skills"><div className="section-eyebrow">CHAPTER 02 · THE TOOLKIT</div><div className="skills-heading"><h2>Things I’m <em>building with.</em></h2><p>Curiosity is the starting point. Practice is what makes it useful.</p></div><div className="skills-grid">{skills.map((skill, i) => { const Icon = skill.icon; return <div className="skill-tile" key={skill.title}><span className="skill-count">0{i + 1}</span><Icon size={23} strokeWidth={1.4} /><h3>{skill.title}</h3><p>{skill.text}</p><span className="skill-underline" /></div> })}</div><div className="principle-line"><span><Check size={14} /> TEST THE ASSUMPTIONS</span><span><Check size={14} /> DOCUMENT THE WORK</span><span><Check size={14} /> KEEP IMPROVING</span></div></section>
+
+        <section className="contact-section" id="contact"><div className="contact-glow" /><div className="contact-content"><span className="section-eyebrow">THE NEXT CHAPTER IS UNWRITTEN</span><h2>Let’s make<br /><em>something matter.</em></h2><p>Open to relevant internships, entry-level opportunities, collaborations, and freelance work where thoughtful building makes a difference.</p><a className="hero-play contact-button" href="https://github.com/rohitkrchandoliya" target="_blank" rel="noreferrer"><Github size={18} /> Connect on GitHub <ArrowUpRight size={16} /></a><span className="contact-note"><span className="live-dot" /> OPEN TO THE RIGHT OPPORTUNITY</span></div></section>
       </main>
 
-      <footer className="footer">
-        <a className="wordmark" href="#home"><span className="mark">R<span>.</span></span><span className="wordmark-text">ROHIT <small>THE BUILDER</small></span></a>
-        <span className="footer-copy">DESIGNED TO EVOLVE · © {new Date().getFullYear()}</span>
-        <a className="back-top" href="#home">BACK TO TOP <ArrowDown size={13} /></a>
-      </footer>
+      <footer className="series-footer"><a className="series-brand" href="#home"><span className="brand-n">R<span>.</span></span><span className="brand-words">ROHIT <small>THE BUILDER</small></span></a><span>AN INDEPENDENT WORK IN PROGRESS · © {new Date().getFullYear()}</span><a href="#home" className="footer-top">BACK TO TOP ↑</a></footer>
 
       <AnimatePresence>
-        {selected && <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelected(null)}>
-          <motion.div className="project-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" initial={{ opacity: 0, y: 24, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 12, scale: 0.98 }} onClick={(event) => event.stopPropagation()}>
-            <button className="modal-close" onClick={() => setSelected(null)} aria-label="Close project details"><X size={20} /></button>
-            <span className="section-index">{selected.number} / {selected.category}</span>
-            <h2 id="modal-title">{selected.title}</h2>
-            <span className="modal-status">{selected.status}</span>
-            <p>{selected.detail}</p>
-            <div className="modal-stack"><span>FOCUS AREAS</span><div>{selected.stack.map((item) => <span key={item}>{item}</span>)}</div></div>
-            <div className="modal-footnote">Public repository and demo links will be added after verification.</div>
-            <a className="text-link" href="https://github.com/rohitkrchandoliya" target="_blank" rel="noreferrer">Visit GitHub profile <ArrowUpRight size={15} /></a>
+        {selected && <motion.div className="episode-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelected(null)}>
+          <motion.div className="episode-modal" role="dialog" aria-modal="true" aria-labelledby="episode-title" initial={{ opacity: 0, y: 24, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 14, scale: 0.98 }} onClick={event => event.stopPropagation()}>
+            <button className="episode-close" onClick={() => setSelected(null)} aria-label="Close episode"><X /></button>
+            <div className={'episode-modal-art poster-' + selected.palette}><span className="modal-episode">ROHIT ORIGINAL · EPISODE {selected.id}</span><span className="modal-big-symbol">{selected.symbol}</span><span className="modal-art-title">{selected.title}</span></div>
+            <div className="episode-modal-copy"><span className="section-eyebrow">{selected.category} · {selected.status}</span><h2 id="episode-title">{selected.title}</h2><p>{selected.detail}</p><div className="episode-tags">{selected.tags.map(tag => <span key={tag}>{tag}</span>)}</div><a className="inline-cta" href="https://github.com/rohitkrchandoliya" target="_blank" rel="noreferrer">Explore GitHub profile <ArrowUpRight size={15} /></a><span className="modal-honesty">Repository-specific links will be added after each project is verified.</span></div>
           </motion.div>
         </motion.div>}
       </AnimatePresence>
