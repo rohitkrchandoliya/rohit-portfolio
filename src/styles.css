@@ -321,3 +321,15 @@ button.inline-cta:focus:not(:focus-visible){outline:none}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+.story-photo-placeholder span{bottom:27px}
+.story-photo-placeholder small{
+  position:absolute;z-index:2;left:13px;bottom:9px;
+  color:#f18b99;font:7px/1.4 var(--mono);letter-spacing:.1em;
+  text-shadow:0 2px 8px #000;white-space:nowrap;
+}
+.story-photo-placeholder img{object-position:70% center}
+@media(max-width:760px){
+  .story-photo-placeholder span{font-size:9px;bottom:25px}
+  .story-photo-placeholder small{font-size:6px;left:10px;bottom:8px}
+}
