@@ -1,6 +1,6 @@
-# Rohit — The Builder
+# Rohit Kumar Chandoliya
 
-A cinematic, responsive personal portfolio built with React, TypeScript, Vite, Framer Motion, and Lucide icons.
+A cinematic, responsive personal portfolio for Rohit Kumar Chandoliya, built with React, TypeScript, Vite, Framer Motion, and Lucide icons.
 
 ## Run locally
 
