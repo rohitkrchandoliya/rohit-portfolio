@@ -125,7 +125,7 @@ function App() {
               <div className="career-item"><span className="career-date">DEC 2023 — MAY 2024</span><strong>Software & Web Developer · Tata Group</strong><p>Web applications, backend functionality, REST API integration, database work, debugging, and deployment (as described in my resume).</p></div>
               <div className="career-item"><span className="career-date">COMPLETED · JUNE 2026</span><strong>Bachelor of Computer Applications · UEM Jaipur</strong><p>Computer Science.</p></div>
             </div>
-            <a className="inline-cta" href="mailto:rohitkchandoliya@gmail.com?subject=Resume%20Request%20-%20Rohit%20Kumar%20Chandoliya">Request my resume <Mail size={15} /></a>
+            <div className="resume-actions"><a className="inline-cta" href="mailto:rohitkchandoliya@gmail.com?subject=AI%20%26%20Automation%20Resume%20Request">AI &amp; Automation Resume <Mail size={15} /></a><a className="inline-cta" href="mailto:rohitkchandoliya@gmail.com?subject=Software%20Engineering%20Resume%20Request">Software Engineering Resume <Mail size={15} /></a></div>
           </div>
         </section>
 
