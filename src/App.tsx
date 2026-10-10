@@ -34,6 +34,8 @@ const countries = [
 function App() {
   const [intro, setIntro] = useState(true)
   const [selected, setSelected] = useState<Project | null>(null)
+  const [showAllProjects, setShowAllProjects] = useState(false)
+  const [showAllExperience, setShowAllExperience] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [country, setCountry] = useState('uae')
   const reduceMotion = useReducedMotion()
@@ -82,7 +84,7 @@ function App() {
           <div className="hero-vertical-label">AI · SOFTWARE · AUTOMATION · SECURITY</div>
           <motion.div className="hero-content" initial={reduceMotion ? false : { opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: intro ? 3.1 : 0.15 }}>
             <div className="series-kicker"><span className="live-dot" /> AVAILABLE IMMEDIATELY <span className="kicker-line" /> 2026</div>
-            <div className="hero-series-mark"><span>R</span><b>AI · SOFTWARE · AUTOMATION · CYBERSECURITY</b></div>
+            <div className="hero-series-mark"><b>AI · SOFTWARE · AUTOMATION · CYBERSECURITY</b></div>
             <h1>Curiosity<br />in <em>production.</em></h1>
             <p className="hero-description">I’m Rohit Kumar Chandoliya — a Computer Science graduate and builder working across AI, automation, software engineering, and application security. I turn ideas into systems, test them, and keep improving.</p>
             <div className="hero-meta"><span className="meta-match">AVAILABLE IMMEDIATELY</span><span>JAIPUR, INDIA</span><span className="meta-rating">UAE + INTERNATIONAL</span></div>
@@ -114,11 +116,12 @@ function App() {
           <div className="section-topline"><span className="red-dash" /> SELECTED PROJECTS <span className="topline-season">SOURCE-LINKED PROJECT FILES</span></div>
           <div className="originals-title-row"><div><h2>Ideas made <em>tangible.</em></h2><p>Explore the source code and current project notes. Status and scope are kept honest—no invented metrics or inflated claims.</p></div><div className="rail-controls originals-controls"><button onClick={() => scrollRail('projects', -1)} aria-label="Scroll projects left"><ChevronLeft /></button><button onClick={() => scrollRail('projects', 1)} aria-label="Scroll projects right"><ChevronRight /></button></div></div>
           <div className="poster-rail project-rail" ref={el => { rails.current.projects = el }}>
-            {projects.map((project, index) => <motion.button type="button" key={project.id} className="project-poster" onClick={() => setSelected(project)} initial={reduceMotion ? false : { opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: 0.55, delay: index * 0.06 }}>
+            {projects.slice(0, 4).map((project, index) => <motion.button type="button" key={project.id} className="project-poster" onClick={() => setSelected(project)} initial={reduceMotion ? false : { opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: 0.55, delay: index * 0.06 }}>
               <div className={'poster-art poster-' + project.palette}><div className="poster-topline"><span>R ORIGINAL</span><span>EP. {project.id}</span></div><div className="poster-halo" /><span className="poster-symbol">{project.symbol}</span><div className="poster-art-title"><span>{project.category}</span><strong>{project.title}</strong></div><span className="poster-play"><Play size={19} fill="currentColor" /></span><span className="poster-corner">{project.id}</span></div>
               <div className="poster-info"><div className="poster-info-top"><span className="poster-match">SOURCE LINKED</span><span>{project.status}</span></div><h3>{project.title}</h3><p>{project.synopsis}</p><div className="poster-tags">{project.tags.slice(0, 3).map(tag => <span key={tag}>{tag}</span>)}</div><div className="poster-view">VIEW PROJECT <ArrowUpRight size={14} /></div></div>
             </motion.button>)}
           </div>
+          <div className="projects-view-all-row"><span>SHOWING 4 OF {projects.length} PROJECTS</span><button className="inline-cta" onClick={() => setShowAllProjects(true)}>View all projects <ArrowUpRight size={15}/></button></div>
           <div className="rail-bottom-note"><span>ROHIT / PROJECTS</span><span>REAL REPOSITORIES · TRANSPARENT PROGRESS</span></div>
         </section>
 
@@ -142,6 +145,7 @@ function App() {
               <div className="career-item"><span className="career-date">ADDITIONAL EDUCATION · JUNE 2020 — JUNE 2023</span><strong>Bachelor of Science · University of Rajasthan</strong><p>Science, as listed in the LinkedIn profile.</p></div>
               <div className="career-item"><span className="career-date">2020</span><strong>RS-CIT · Vardhman Mahaveer Open University</strong><p>Computer Information Technology, as listed in the LinkedIn profile.</p></div>
             </div>
+            <button className="inline-cta experience-view-all" onClick={() => setShowAllExperience(true)}>View all experience &amp; education <ArrowUpRight size={15}/></button>
             <div className="profile-detail-grid">
               <div className="profile-detail-card"><span className="section-eyebrow">CERTIFICATIONS &amp; LEARNING</span><ul><li>Certified Ethical Hacker (CEH) — listed in LinkedIn profile; verification pending.</li><li>Cambridge English Test — listed in LinkedIn profile; verification pending.</li><li>Event Volunteer · CyberHunt.</li><li>Bug Bounty — profile-listed credential/experience; scope not specified.</li><li>Bank of America · Investment Banking Job Simulation.</li></ul></div>
               <div className="profile-detail-card"><span className="section-eyebrow">HONORS &amp; PUBLICATIONS</span><ul><li>Best Cybersecurity Education Provider — LinkedIn profile award listing; issuer/date not specified in the PDF.</li><li>2nd place · UEM international conference — Certificate Automation System, as stated in the resume.</li><li>Author of <em>Secure The Future</em> — publication listed in LinkedIn profile.</li></ul></div>
@@ -151,7 +155,7 @@ function App() {
         </section>
 
         <section className="story-section" id="about">
-          <div className="story-art"><div className="story-art-ring" /><span className="story-letter">R</span><span className="story-signature">FOUNDER · CHEAKSTAR</span><span className="story-stamp">ROHIT<br />KUMAR<br /><b>CHANDOLIYA</b></span><span className="story-photo-note">PERSONAL PORTRAIT</span></div>
+          <div className="story-art story-photo-art"><div className="story-art-ring" /><div className="story-photo-placeholder"><img src="https://avatars.githubusercontent.com/u/105813171?v=4" alt="Rohit Kumar Chandoliya profile portrait" /><span>ROHIT KUMAR<br/>CHANDOLIYA</span></div><span className="story-signature">FOUNDER · CHEAKSTAR</span><span className="story-stamp">AI · SOFTWARE<br /><b>AUTOMATION · SECURITY</b></span></div>
           <div className="story-copy"><span className="section-eyebrow">CHAPTER 01 · THE PERSON</span><h2>Build with<br /><em>purpose.</em></h2><p>I’m Rohit Kumar Chandoliya, a Computer Science graduate, Founder at Cheakstar, and an early-career software engineer interested in AI, automation, backend/web development, and cybersecurity.</p><p>I enjoy taking problems from idea to implementation—breaking them down, connecting systems, testing assumptions, documenting what works, and improving the result.</p><div className="achievement-chip"><Award size={18} /><span><strong>2nd Place</strong><small>UEM International Conference · Certificate Automation System</small></span></div><div className="achievement-chip"><BookIcon /><span><strong>Author · “Secure The Future”</strong><small>Cybersecurity and web security fundamentals</small></span></div><a className="inline-cta" href="https://github.com/rohitkrchandoliya" target="_blank" rel="noreferrer">Explore my GitHub <ArrowUpRight size={16} /></a></div>
         </section>
 
@@ -173,6 +177,32 @@ function App() {
             <button className="episode-close" onClick={() => setSelected(null)} aria-label="Close project details"><X /></button>
             <div className={'episode-modal-art poster-' + selected.palette}><span className="modal-episode">ROHIT PROJECT · EPISODE {selected.id}</span><span className="modal-big-symbol">{selected.symbol}</span><span className="modal-art-title">{selected.title}</span></div>
             <div className="episode-modal-copy"><span className="section-eyebrow">{selected.category} · {selected.status}</span><h2 id="episode-title">{selected.title}</h2><p>{selected.detail}</p><div className="episode-tags">{selected.tags.map(tag => <span key={tag}>{tag}</span>)}</div><a className="inline-cta" href={selected.url} target="_blank" rel="noreferrer">View source repository <ExternalLink size={15} /></a><span className="modal-honesty">Project scope and current implementation are described conservatively; please refer to the repository for the latest code.</span></div>
+          </motion.div>
+        </motion.div>}
+        {showAllProjects && <motion.div className="episode-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowAllProjects(false)}>
+          <motion.div className="all-items-modal" role="dialog" aria-modal="true" aria-labelledby="all-projects-title" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }} onClick={event => event.stopPropagation()}>
+            <button className="episode-close" onClick={() => setShowAllProjects(false)} aria-label="Close all projects"><X/></button><span className="section-eyebrow">FULL PROJECT CATALOGUE</span><h2 id="all-projects-title">All <em>projects.</em></h2><div className="all-projects-grid">{projects.map(project => <a key={project.id} href={project.url} target="_blank" rel="noreferrer" className="all-project-item"><span>{project.id} / {project.category}</span><strong>{project.title}</strong><small>{project.status}</small><p>{project.synopsis}</p><b>OPEN REPOSITORY ↗</b></a>)}</div>
+          </motion.div>
+        </motion.div>}
+        {showAllExperience && <motion.div className="episode-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowAllExperience(false)}>
+          <motion.div className="all-items-modal experience-modal" role="dialog" aria-modal="true" aria-labelledby="all-experience-title" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }} onClick={event => event.stopPropagation()}>
+            <button className="episode-close" onClick={() => setShowAllExperience(false)} aria-label="Close all experience"><X/></button><span className="section-eyebrow">CAREER ARCHIVE</span><h2 id="all-experience-title">Experience &amp; <em>education.</em></h2><div className="career-list modal-career-list">
+              <div className="career-item"><span className="career-date">FOUNDER · OCTOBER 2023 — PRESENT</span><strong>CheakStar Private Limited</strong><p>Technology entrepreneurship across AI agents, automation, software development, cybersecurity, product development, client solutions and business development.</p></div>
+              <div className="career-item"><span className="career-date">APRIL 2023 — JUNE 2023 · LINKEDIN ENTRY</span><strong>Software Engineer Intern · Walmart</strong><p>Software engineering internship as listed in LinkedIn; resume contains a different Walmart title/date entry.</p></div>
+              <div className="career-item"><span className="career-date">FEBRUARY 2024 — JULY 2024 · LINKEDIN ENTRY</span><strong>IAM Developer · Tata Group</strong><p>Identity and access management development as listed in LinkedIn; resume contains different title/date wording.</p></div>
+              <div className="career-item"><span className="career-date">MAY 2024 — OCTOBER 2024</span><strong>Cyber Security Intern · JPMorgan Chase &amp; Co.</strong><p>Cybersecurity internship, United States, as listed in LinkedIn.</p></div>
+              <div className="career-item"><span className="career-date">JULY 2024 — SEPTEMBER 2024</span><strong>Investment Banking Intern · Bank of America</strong><p>Experience entry listed in LinkedIn profile.</p></div>
+              <div className="career-item"><span className="career-date">DECEMBER 2023 — MAY 2024 · RESUME ENTRY</span><strong>Software &amp; Web Developer · Tata Group</strong><p>Web applications, backend functionality, REST API integration, database work, debugging and deployment, as described in the resume.</p></div>
+              <div className="career-item"><span className="career-date">SEPTEMBER 2020 — PRESENT</span><strong>Office Associate · The Last Hope</strong><p>Role and dates as listed in LinkedIn.</p></div>
+              <div className="career-item"><span className="career-date">JULY 2022 — DECEMBER 2022</span><strong>EV Engineering · Ford Technology Services India</strong><p>Experience entry listed in LinkedIn profile.</p></div>
+              <div className="career-item"><span className="career-date">FEBRUARY 2022 — JUNE 2023</span><strong>Social Media Manager · ZEE5</strong><p>Experience entry listed in LinkedIn profile.</p></div>
+              <div className="career-item"><span className="career-date">SEPTEMBER 2025 — JULY 2026</span><strong>Event Coordinator · The CIRCLE Design Studio, UEM Jaipur</strong><p>Campus event coordination listed in LinkedIn profile.</p></div>
+              <div className="career-item"><span className="career-date">MARCH 2025 — JULY 2026</span><strong>Operations &amp; Challenge Lead · HackSec</strong><p>Cybersecurity community operations and challenge leadership listed in LinkedIn.</p></div>
+              <div className="career-item"><span className="career-date">JANUARY 2025 — JULY 2026</span><strong>Club Head · PICXL Photography Club</strong><p>Club leadership listed in LinkedIn profile.</p></div>
+              <div className="career-item"><span className="career-date">JULY 2023 — JULY 2026</span><strong>Bachelor of Computer Applications · UEM Jaipur</strong><p>Computer Science; completed July 2026 according to LinkedIn profile.</p></div>
+              <div className="career-item"><span className="career-date">JUNE 2020 — JUNE 2023</span><strong>Bachelor of Science · University of Rajasthan</strong><p>Science, as listed in LinkedIn profile.</p></div>
+              <div className="career-item"><span className="career-date">2020</span><strong>RS-CIT · Vardhman Mahaveer Open University</strong><p>Computer Information Technology, as listed in LinkedIn profile.</p></div>
+            </div>
           </motion.div>
         </motion.div>}
       </AnimatePresence>
