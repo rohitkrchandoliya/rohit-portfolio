@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import {
-  ArrowDown, ArrowRight, ArrowUpRight, Award, BookOpen, Check,
+  ArrowDown, ArrowUpRight, Award, BookOpen, Check,
   ChevronLeft, ChevronRight, Code2, ExternalLink, Github, Globe2,
   Mail, Play, ShieldCheck, Sparkles, X, Zap, Phone, Linkedin,
 } from 'lucide-react'
