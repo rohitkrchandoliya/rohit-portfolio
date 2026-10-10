@@ -333,3 +333,11 @@ button.inline-cta:focus:not(:focus-visible){outline:none}
   .story-photo-placeholder span{font-size:9px;bottom:25px}
   .story-photo-placeholder small{font-size:6px;left:10px;bottom:8px}
 }
+
+/* Remove the oversized gap between the project catalogue and career section */
+.originals-section{padding-bottom:34px}
+.featured-section{margin-top:12px}
+@media(max-width:760px){
+  .originals-section{padding-bottom:28px}
+  .featured-section{margin-top:10px}
+}
