@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import {
   ArrowDown, ArrowUpRight, Award, BookOpen, Check,
-  ChevronLeft, ChevronRight, Code2, ExternalLink, Github, Globe2,
+  Code2, ExternalLink, Github, Globe2,
   Mail, Play, ShieldCheck, Sparkles, X, Zap, Phone, Linkedin,
 } from 'lucide-react'
 
@@ -39,7 +39,6 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [country, setCountry] = useState('uae')
   const reduceMotion = useReducedMotion()
-  const rails = useRef<Record<string, HTMLDivElement | null>>({})
 
   useEffect(() => {
     if (reduceMotion) setIntro(false)
@@ -53,7 +52,6 @@ function App() {
     document.body.style.overflow = 'hidden'
     return () => { window.removeEventListener('keydown', onKeyDown); document.body.style.overflow = '' }
   }, [selected])
-  const scrollRail = (id: string, direction: number) => rails.current[id]?.scrollBy({ left: direction * 420, behavior: 'smooth' })
   const closeMenu = () => setMenuOpen(false)
 
   return (
@@ -91,18 +89,26 @@ function App() {
             <div className="hero-buttons"><a className="hero-play" href="#originals"><Play size={18} fill="currentColor" /> Explore my work</a><a className="hero-more" href="#contact"><Mail size={16} /> Contact me</a><a className="hero-more" href="mailto:rohitkchandoliya@gmail.com?subject=Resume%20Request"><BookOpen size={16} /> Request resume</a></div>
             <div className="hero-foot">BCA · UEM JAIPUR · 2026 <span /> OPEN TO RELEVANT ROLES</div>
           </motion.div>
-          <div className="hero-art hero-art-profile" aria-label="AI automation systems visual">
-            <div className="hero-orbit orbit-one"></div><div className="hero-orbit orbit-two"></div>
-            <div className="hero-code-window"><div className="window-top"><span></span><span></span><span></span><b>rohit / automation-lab</b></div><div className="code-lines"><i>const</i> agent = <em>createAgent</em>()<br/><i>await</i> agent.<em>research</em>()<br/><i>await</i> agent.<em>buildWorkflow</em>()<br/><i>return</i> <strong>verifiedOutput</strong></div><div className="code-status"><span>●</span> WORKFLOW STATUS <b>READY</b></div></div>
-            <div className="automation-console"><span>ROHIT / AUTOMATION LAB</span><b><Sparkles size={15}/> AI AGENTS <i>●</i></b><b><Zap size={15}/> WORKFLOW AUTOMATION <i>●</i></b><b><Code2 size={15}/> SOFTWARE SYSTEMS <i>●</i></b><b><ShieldCheck size={15}/> APPLICATION SECURITY <i>●</i></b><small>DESIGN → AUTOMATE → TEST → IMPROVE</small></div>
-            <div className="hero-art-chip chip-a"><span className="chip-dot" /> AVAILABLE <b>IMMEDIATELY</b></div><div className="hero-art-chip chip-b"><Globe2 size={15}/> UAE + GLOBAL OPPORTUNITIES</div>
+          <div className="hero-art hero-art-profile" aria-label="Animated three-dimensional AI systems visualization">
+            <div className="system-scene" aria-hidden="true">
+              <div className="system-grid" />
+              <div className="system-orbit system-orbit-one"><span /></div>
+              <div className="system-orbit system-orbit-two"><span /></div>
+              <div className="system-orbit system-orbit-three"><span /></div>
+              <div className="system-core"><div className="core-face">R<span>.</span></div><span className="core-ring" /></div>
+              <div className="system-node node-ai"><Sparkles size={18}/><span>AI SYSTEMS</span></div>
+              <div className="system-node node-code"><Code2 size={18}/><span>SOFTWARE</span></div>
+              <div className="system-node node-sec"><ShieldCheck size={18}/><span>APP SECURITY</span></div>
+              <div className="system-node node-flow"><Zap size={18}/><span>AUTOMATION</span></div>
+              <div className="system-caption">DESIGN <i>→</i> BUILD <i>→</i> VERIFY</div>
+            </div>
           </div>
           <a className="hero-scroll" href="#continue"><span>SCROLL TO EXPLORE</span><ArrowDown size={13} /></a><div className="hero-fade" />
         </section>
 
         <section className="continue-section" id="continue">
-          <div className="rail-heading"><div><span className="rail-eyebrow">THE STORY SO FAR</span><h2>Explore the universe</h2></div><div className="rail-controls"><button onClick={() => scrollRail('explore', -1)} aria-label="Scroll left"><ChevronLeft /></button><button onClick={() => scrollRail('explore', 1)} aria-label="Scroll right"><ChevronRight /></button></div></div>
-          <div className="poster-rail explore-rail" ref={el => { rails.current.explore = el }}>
+          <div className="rail-heading"><div><span className="rail-eyebrow">THE STORY SO FAR</span><h2>Explore the universe</h2></div></div>
+          <div className="poster-rail explore-rail">
             {[
               { no: '01', title: 'Selected Projects', sub: 'Things I build', target: '#originals', palette: 'poster-originals', glyph: '01' },
               { no: '02', title: 'Career Timeline', sub: 'Experience & education', target: '#career', palette: 'poster-about', glyph: 'CV' },
@@ -114,8 +120,8 @@ function App() {
 
         <section className="originals-section" id="originals">
           <div className="section-topline"><span className="red-dash" /> SELECTED PROJECTS <span className="topline-season">SOURCE-LINKED PROJECT FILES</span></div>
-          <div className="originals-title-row"><div><h2>Ideas made <em>tangible.</em></h2><p>Explore the source code and current project notes. Status and scope are kept honest—no invented metrics or inflated claims.</p></div><div className="rail-controls originals-controls"><button onClick={() => scrollRail('projects', -1)} aria-label="Scroll projects left"><ChevronLeft /></button><button onClick={() => scrollRail('projects', 1)} aria-label="Scroll projects right"><ChevronRight /></button></div></div>
-          <div className="poster-rail project-rail" ref={el => { rails.current.projects = el }}>
+          <div className="originals-title-row"><div><h2>Ideas made <em>tangible.</em></h2><p>Explore the source code and current project notes. Status and scope are kept honest—no invented metrics or inflated claims.</p></div></div>
+          <div className="poster-rail project-rail">
             {projects.slice(0, 4).map((project, index) => <motion.button type="button" key={project.id} className="project-poster" onClick={() => setSelected(project)} initial={reduceMotion ? false : { opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: 0.55, delay: index * 0.06 }}>
               <div className={'poster-art poster-' + project.palette}><div className="poster-topline"><span>R ORIGINAL</span><span>EP. {project.id}</span></div><div className="poster-halo" /><span className="poster-symbol">{project.symbol}</span><div className="poster-art-title"><span>{project.category}</span><strong>{project.title}</strong></div><span className="poster-play"><Play size={19} fill="currentColor" /></span><span className="poster-corner">{project.id}</span></div>
               <div className="poster-info"><div className="poster-info-top"><span className="poster-match">SOURCE LINKED</span><span>{project.status}</span></div><h3>{project.title}</h3><p>{project.synopsis}</p><div className="poster-tags">{project.tags.slice(0, 3).map(tag => <span key={tag}>{tag}</span>)}</div><div className="poster-view">VIEW PROJECT <ArrowUpRight size={14} /></div></div>
@@ -126,7 +132,7 @@ function App() {
         </section>
 
         <section className="featured-section" id="career">
-          <div className="featured-visual"><div className="featured-grid" /><div className="featured-orb" /><span className="featured-index">CAREER FILE / 001</span><div className="featured-bigmark">BUILD<span>.</span></div><div className="featured-side-note">LEARN · SHIP · IMPROVE</div></div>
+          <div className="featured-visual" aria-label="Abstract software architecture visualization"><div className="career-visual-grid" /><span className="featured-index">CAREER FILE / 001</span><div className="career-visual-window"><div className="career-window-top"><i/><i/><i/><span>career / systems.log</span></div><div className="career-code-lines"><b>01</b><span>build</span><em> reliable systems</em><b>02</b><span>automate</span><em> repeatable work</em><b>03</b><span>secure</span><em> the workflow</em></div><div className="career-window-footer"><span>STATUS</span><strong><i/> CONTINUOUSLY IMPROVING</strong></div></div><div className="career-orbit career-orbit-a"/><div className="career-orbit career-orbit-b"/><div className="featured-side-note">LEARN · SHIP · IMPROVE</div></div>
           <div className="featured-copy"><span className="section-eyebrow">EXPERIENCE & EDUCATION</span><h2>Grounded in<br /><em>real work.</em></h2>
             <div className="career-list">
               <div className="career-item"><span className="career-date">FOUNDER · OCTOBER 2023 — PRESENT</span><strong>CheakStar Private Limited</strong><p>Technology entrepreneurship across AI agents, automation, software development, cybersecurity, product development, client solutions and business development.</p></div>
@@ -155,7 +161,7 @@ function App() {
         </section>
 
         <section className="story-section" id="about">
-          <div className="story-art story-photo-art"><div className="story-art-ring" /><div className="story-photo-placeholder story-photo-monogram"><img src="/images/portfolio-hero.webp" alt="Rohit at his professional automation workspace" loading="lazy" /><span className="portrait-initial">ROHIT KUMAR<br />CHANDOLIYA</span><small>AI · SOFTWARE · AUTOMATION</small></div><span className="story-signature">FOUNDER · CHEAKSTAR</span><span className="story-stamp">AI · SOFTWARE<br /><b>AUTOMATION · SECURITY</b></span></div>
+          <div className="story-art story-photo-art" aria-label="Software engineering and cybersecurity illustration"><div className="story-art-ring" /><div className="about-system-scene"><div className="about-window"><div className="about-window-top"><i/><i/><i/><span>rohit / build-notes</span></div><div className="about-code"><b>const</b> idea = <em>"problem"</em><br/><b>await</b> build(idea)<br/><b>return</b> <strong>workingSystem</strong></div><div className="about-progress"><span/><span/><span/><span/><span/><span/><span/></div></div><div className="about-float-card about-float-ai"><Sparkles size={17}/><span>AI / AGENTS</span></div><div className="about-float-card about-float-sec"><ShieldCheck size={17}/><span>SECURITY</span></div><div className="about-circuit about-circuit-one"/><div className="about-circuit about-circuit-two"/></div><span className="story-signature">FOUNDER · CHEAKSTAR</span><span className="story-stamp">AI · SOFTWARE<br /><b>AUTOMATION · SECURITY</b></span></div>
           <div className="story-copy"><span className="section-eyebrow">CHAPTER 01 · THE PERSON</span><h2>Build with<br /><em>purpose.</em></h2><p>I’m Rohit Kumar Chandoliya, a Computer Science graduate, Founder at Cheakstar, and an early-career software engineer interested in AI, automation, backend/web development, and cybersecurity.</p><p>I enjoy taking problems from idea to implementation—breaking them down, connecting systems, testing assumptions, documenting what works, and improving the result.</p><div className="achievement-chip"><Award size={18} /><span><strong>2nd Place</strong><small>UEM International Conference · Certificate Automation System</small></span></div><div className="achievement-chip"><BookIcon /><span><strong>Author · “Secure The Future”</strong><small>Cybersecurity and web security fundamentals</small></span></div><a className="inline-cta" href="https://github.com/rohitkrchandoliya" target="_blank" rel="noreferrer">Explore my GitHub <ArrowUpRight size={16} /></a></div>
         </section>
 
