@@ -27,9 +27,16 @@ Connect this GitHub repository to Netlify and deploy. Vite's output is static an
 ## Before public launch
 
 - Verify project implementation status and add repository/demo links only for projects that are publicly available.
-- Add a professional contact email and LinkedIn URL when ready.
-- Add a reviewed resume PDF if you want a downloadable CV.
+- Resume PDFs are intentionally request-only; the portfolio provides role-specific email request links.
+- Keep availability, relocation requirements, contact details, and role targets current.
 - Review all project descriptions for accuracy before sharing with recruiters or clients.
+
+## Candidate positioning
+
+- Availability: immediate.
+- Role targets: AI, software engineering, automation, and cybersecurity / application security.
+- International target: UAE plus other countries where work authorization sponsorship and practical relocation support can be discussed.
+- Resume visibility: request-only; no public resume PDFs are included.
 
 ## Current content policy
 
