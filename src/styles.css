@@ -99,3 +99,17 @@
 
 .resume-actions{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:6px}.resume-actions .inline-cta{font-size:10px}
 @media(max-width:620px){.resume-actions{flex-direction:column;align-items:flex-start;gap:4px}}
+
+
+/* Expanded professional profile and automation console */
+.automation-console{position:absolute;right:1%;top:12%;width:39%;padding:18px;background:linear-gradient(145deg,#11141ceF,#090a0df5);border:1px solid #ed294366;box-shadow:0 15px 50px #0009;display:flex;flex-direction:column;gap:13px;color:#e9e4ec;font:9px var(--mono);letter-spacing:.06em}
+.automation-console>span{font-size:8px;color:#f15a70;letter-spacing:.12em;margin-bottom:5px}
+.automation-console b{font-weight:500;padding:8px 9px;border:1px solid #ffffff17;background:#ffffff05}
+.automation-console i{float:right;color:#72d7a0;font-style:normal}
+.automation-console small{font-size:7px;color:#aaa1ae;line-height:1.7;margin-top:5px}
+.profile-detail-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:20px}
+.profile-detail-card{padding:16px;background:#ffffff05;border:1px solid #ffffff17}
+.profile-detail-card ul{margin:12px 0 0;padding-left:17px;display:flex;flex-direction:column;gap:9px}
+.profile-detail-card li{font-size:10px;line-height:1.7;color:#c3bdc7}
+@media(max-width:900px){.automation-console{width:42%;right:0;top:14%;padding:12px;gap:8px}.automation-console b{padding:6px;font-size:8px}}
+@media(max-width:620px){.automation-console{width:52%;right:0;top:13%;padding:9px;gap:6px}.automation-console>span{font-size:6px}.automation-console b{font-size:6px;padding:5px}.automation-console small{font-size:6px}.profile-detail-card li{font-size:9px}}
