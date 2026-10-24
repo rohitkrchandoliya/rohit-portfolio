@@ -458,7 +458,7 @@ function App() {
             </div>
             <Reveal delay={240} className="hero-visual-wrap">
               <figure className="hero-visual">
-                <img src="images/portfolio-hero.webp" alt="Rohit Kumar Chandoliya at his security workstation" width={480} height={270} />
+                <img src="images/portfolio-hero.webp" alt="Rohit Kumar Chandoliya — Founder @ Cheakstar" width={1280} height={1600} />
                 <figcaption>
                   <span><Icon name="shield" /> Bug Bounty</span>
                   <span><Icon name="bot" /> AI Agents</span>
