@@ -1,6 +1,15 @@
-# Rohit Kumar Chandoliya
+# Rohit Kumar Chandoliya — Portfolio (Rebuilt)
 
-A cinematic, responsive personal portfolio for Rohit Kumar Chandoliya, built with React, TypeScript, Vite, Framer Motion, and Lucide icons.
+## Live
+
+**[rohitkrchandoliya.github.io/rohit-portfolio](https://rohitkrchandoliya.github.io/rohit-portfolio/)**
+
+A fast, single-page portfolio for Rohit Kumar Chandoliya — Founder @ Cheakstar,
+bug bounty hunter & cybersecurity researcher, author of the *Secure The Future*
+book series, and creator of ByteShield.
+
+Built with React + TypeScript + Vite. No animation/icon libraries: scroll-reveal
+animations use a small IntersectionObserver hook and inline SVG icons.
 
 ## Run locally
 
@@ -16,28 +25,15 @@ npm run lint
 npm run build
 ```
 
-## Deploy on Netlify
+## Deploy
 
 - Build command: `npm run build`
 - Publish directory: `dist`
-- Node.js: use a current supported LTS release
+- Works on Netlify, Vercel, GitHub Pages or any static host.
 
-Connect this GitHub repository to Netlify and deploy. Vite's output is static and lives in `dist`.
+## Content policy
 
-## Before public launch
-
-- Verify project implementation status and add repository/demo links only for projects that are publicly available.
-- Resume PDFs are intentionally request-only; the portfolio provides role-specific email request links.
-- Keep availability, relocation requirements, contact details, and role targets current.
-- Review all project descriptions for accuracy before sharing with recruiters or clients.
-
-## Candidate positioning
-
-- Availability: immediate.
-- Role targets: AI, software engineering, automation, and cybersecurity / application security.
-- International target: UAE plus other countries where work authorization sponsorship and practical relocation support can be discussed.
-- Resume visibility: request-only; no public resume PDFs are included.
-
-## Current content policy
-
-This portfolio intentionally avoids invented client results, certifications, metrics, and demo URLs. Project status is described conservatively until code and evidence are verified.
+Nothing here is invented: no fake clients, employers, metrics or prices.
+Project status and book/store links reflect Rohit's real, verified work —
+AI Bug Hunter, Bug Hunter King Edition, CSRE, his public GitHub repositories,
+and the *Secure The Future* bookstore at https://payhip.com/securethefuture.
