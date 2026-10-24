@@ -132,8 +132,9 @@ img { max-width: 100%; display: block; }
   margin: 0; border: 1px solid var(--line); border-radius: 20px; overflow: hidden;
   background: var(--panel); box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
   transform: rotate(1.2deg);
+  max-width: 430px; justify-self: end; width: 100%;
 }
-.hero-visual img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+.hero-visual img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 18%; }
 .hero-visual figcaption {
   display: flex; flex-wrap: wrap; gap: 8px; padding: 13px 15px;
   border-top: 1px solid var(--line-soft); background: rgba(7, 13, 26, 0.55);
@@ -310,7 +311,7 @@ img { max-width: 100%; display: block; }
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
   .hero-inner { grid-template-columns: 1fr; }
-  .hero-visual { max-width: 560px; transform: none; }
+  .hero-visual { max-width: 430px; transform: none; justify-self: center; }
   .about-grid, .byteshield-panel { grid-template-columns: 1fr; }
 }
 @media (max-width: 760px) {
