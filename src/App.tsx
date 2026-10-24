@@ -1,219 +1,711 @@
-import { useEffect, useState } from 'react'
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import {
-  ArrowDown, ArrowUpRight, Award, BookOpen, Check,
-  Code2, ExternalLink, Github, Globe2,
-  Mail, Play, ShieldCheck, Sparkles, X, Zap, Phone, Linkedin,
-} from 'lucide-react'
+import { useEffect, useState, type ReactNode } from 'react'
 
-type Project = {
-  id: string; title: string; category: string; status: string; synopsis: string
-  detail: string; tags: string[]; palette: string; symbol: string; url: string
+/* ---------------------------------- data ---------------------------------- */
+
+const LINKS = {
+  github: 'https://github.com/rohitkrchandoliya',
+  linkedin: 'https://www.linkedin.com/in/rohitkrchandoliya',
+  youtube: 'https://www.youtube.com/@ByteShieldTV',
+  instagram: 'https://www.instagram.com/rohitkrchandoliya',
+  instagramChannel: 'https://www.instagram.com/byteshieldtv',
+  store: 'https://payhip.com/securethefuture',
+  email: 'rohitkrchandoliya@gmail.com',
 }
 
-const projects: Project[] = [
-  { id: '01', title: 'Self Learning AI Assistant', category: 'AI · AUTOMATION', status: 'PROJECT', synopsis: 'An AI assistant built around learning, interaction, and useful task automation.', detail: 'An AI-based assistant designed to support learning, user interaction, and task automation. The public repository is the source of truth for implementation details.', tags: ['Python', 'AI assistant', 'Automation'], palette: 'ember', symbol: 'AI', url: 'https://github.com/rohitkrchandoliya/CS--Ai-Assistant' },
-  { id: '02', title: 'AI AppSec Platform', category: 'APPLICATION SECURITY', status: 'EARLY MVP', synopsis: 'Developer-first static checks, normalized findings, and machine-readable security reports.', detail: 'The repository documents Python and JavaScript/TypeScript static checks, secret-pattern detection with redacted evidence, dependency inventory, optional OSV advisory audits, CycloneDX SBOM export, risk scoring, and JSON/SARIF reports. It is an early MVP with intentionally limited rule coverage—not a guarantee that a codebase is secure.', tags: ['Python', 'SAST', 'SARIF', 'SBOM'], palette: 'crimson', symbol: 'SEC', url: 'https://github.com/rohitkrchandoliya/ai-appsec-platform' },
-  { id: '03', title: 'Autonomous YouTube Factory', category: 'AI · CONTENT SYSTEMS', status: 'IN PROGRESS', synopsis: 'A cloud-first pipeline for research-led video and Shorts production.', detail: 'The repository describes research collection, evidence packs, scheduling, a durable queue, script/storyboard models, rights tracking, quality gates, analytics, moderation, and audit events. Unattended publishing remains fail-closed until deployment configuration, OAuth, provider licensing, and production verification are complete.', tags: ['Python', 'Automation', 'PostgreSQL', 'QA'], palette: 'gold', symbol: '▶', url: 'https://github.com/rohitkrchandoliya/autonomous-youtube-factory' },
-  { id: '04', title: 'Certificate Automation System', category: 'AUTOMATION · LEADERSHIP', status: 'AWARD-WINNING PROJECT', synopsis: 'A system for generating and managing digital certificates.', detail: 'Built as a team-led project for certificate generation and management. The resume states this project achieved 2nd place at a UEM international conference.', tags: ['Automation', 'Team Lead', 'Digital certificates'], palette: 'violet', symbol: 'CAS', url: 'https://github.com/rohitkrchandoliya/Event-Certificates-Automation' },
-  { id: '05', title: 'Smart-Scan: Smart Contract Analyzer', category: 'WEB3 · SECURITY', status: 'HACKATHON PROJECT', synopsis: 'A Web3 security project focused on smart-contract and wallet analysis.', detail: 'The repository describes smart contract and wallet analysis, secure API-key handling, and a zero-cost deployment goal. The precise detection coverage should be assessed from the source code and its current tests.', tags: ['Web3', 'Security', 'API integration'], palette: 'ice', symbol: 'W3', url: 'https://github.com/rohitkrchandoliya/Smart-Contract-Analyzer---AceHack-4.0' },
-  { id: '06', title: 'AI Resume Analyzer & Job Matcher', category: 'AI · CAREER TOOLS', status: 'PROJECT REPOSITORY', synopsis: 'A project focused on connecting resume information with job opportunities.', detail: 'A public repository in the AI and career-tool space. The implementation and supported features should be confirmed from the source before stronger claims or metrics are displayed.', tags: ['AI', 'Resume analysis', 'Job matching'], palette: 'mint', symbol: 'CV', url: 'https://github.com/rohitkrchandoliya/AI-Resume-Analyzer-Job-Matcher' },
+type Project = {
+  title: string
+  category: string
+  status: string
+  description: string
+  tags: string[]
+  url?: string
+  flagship?: boolean
+}
+
+const flagshipProjects: Project[] = [
+  {
+    title: 'AI Bug Hunter',
+    category: 'AI · APPLICATION SECURITY',
+    status: 'FLAGSHIP BUILD',
+    description:
+      'An automated AI security scanner that takes a target from recon and mapping through testing and verification to a detailed report — technical evidence, severity, potential impact and practical fixes, not just a list. AI triage reduces false positives and prioritises genuine issues.',
+    tags: ['Python', 'AI', 'Recon → Verify → Report'],
+    flagship: true,
+  },
+  {
+    title: 'Bug Hunter — King Edition',
+    category: 'AI · SECURITY TOOLING',
+    status: 'FLAGSHIP BUILD',
+    description:
+      'The King Edition of the AI Bug Hunter: modular engines for any target type — URL, IP, file, folder or codebase — with a local admin dashboard and end-to-end automated reporting, from code analysis through vulnerability verification.',
+    tags: ['Python', 'Local AI (Ollama)', 'Dashboard', 'Reporting'],
+    flagship: true,
+  },
+  {
+    title: 'CSRE — CheakStar Reverse Engineering',
+    category: 'REVERSE ENGINEERING',
+    status: 'DELIVERED',
+    description:
+      'A reverse-engineering suite built under Cheakstar: a documented source package plus a Windows build that was executed and verified on a real machine.',
+    tags: ['Reverse Engineering', 'Windows', 'Cheakstar'],
+    flagship: true,
+  },
+]
+
+const repoProjects: Project[] = [
+  {
+    title: 'AI AppSec Platform',
+    category: 'APPLICATION SECURITY',
+    status: 'EARLY MVP',
+    description:
+      'Developer-first static checks for Python and JavaScript/TypeScript, secret-pattern detection with redacted evidence, dependency inventory, optional OSV advisory audits, CycloneDX SBOM export, risk scoring, and JSON/SARIF reports.',
+    tags: ['Python', 'SAST', 'SARIF', 'SBOM'],
+    url: 'https://github.com/rohitkrchandoliya/ai-appsec-platform',
+  },
+  {
+    title: 'Self Learning AI Assistant',
+    category: 'AI · AUTOMATION',
+    status: 'PROJECT',
+    description:
+      'An AI assistant built around learning, interaction, and useful task automation.',
+    tags: ['Python', 'AI Assistant', 'Automation'],
+    url: 'https://github.com/rohitkrchandoliya/CS--Ai-Assistant',
+  },
+  {
+    title: 'Autonomous YouTube Factory',
+    category: 'AI · CONTENT SYSTEMS',
+    status: 'IN PROGRESS',
+    description:
+      'A cloud-first pipeline for research-led video and Shorts production — research collection, scheduling, a durable queue, script/storyboard models, quality gates and analytics.',
+    tags: ['Python', 'Automation', 'PostgreSQL', 'QA'],
+    url: 'https://github.com/rohitkrchandoliya/autonomous-youtube-factory',
+  },
+  {
+    title: 'Certificate Automation System',
+    category: 'AUTOMATION · TEAM LEAD',
+    status: 'AWARD-WINNING PROJECT',
+    description:
+      'A team-led system for generating and managing digital certificates. This project achieved 2nd place at a UEM international conference.',
+    tags: ['Automation', 'Team Lead', 'Digital Certificates'],
+    url: 'https://github.com/rohitkrchandoliya/Event-Certificates-Automation',
+  },
+  {
+    title: 'Smart-Scan: Smart Contract Analyzer',
+    category: 'WEB3 · SECURITY',
+    status: 'HACKATHON PROJECT',
+    description:
+      'A Web3 security project from AceHack 4.0 focused on smart-contract and wallet analysis, with secure API-key handling.',
+    tags: ['Web3', 'Security', 'API Integration'],
+    url: 'https://github.com/rohitkrchandoliya/Smart-Contract-Analyzer---AceHack-4.0',
+  },
+  {
+    title: 'AI Resume Analyzer & Job Matcher',
+    category: 'AI · CAREER TOOLS',
+    status: 'PROJECT',
+    description:
+      'A project focused on connecting resume information with suitable job opportunities.',
+    tags: ['AI', 'Resume Analysis', 'Job Matching'],
+    url: 'https://github.com/rohitkrchandoliya/AI-Resume-Analyzer-Job-Matcher',
+  },
 ]
 
 const skills = [
-  { title: 'AI, AI Agents & Machine Learning', text: 'Python · TensorFlow · AI assistants · Prompt engineering', icon: Sparkles },
-  { title: 'Software & Web Development', text: 'JavaScript · TypeScript · C / C++ · Java · HTML · CSS · Next.js · REST APIs', icon: Code2 },
-  { title: 'Automation, Data & Cloud', text: 'n8n · Supabase · SQL · Workflow integration · Cloud platforms', icon: Zap },
-  { title: 'Cybersecurity & Ethical Hacking', text: 'Application security · Vulnerability assessment · CTF · Bug bounty interests', icon: ShieldCheck },
+  {
+    title: 'Cybersecurity & Bug Bounty',
+    text: 'Vulnerability assessment · Web application security · Recon & mapping · Evidence-based reporting',
+    glyph: 'shield',
+  },
+  {
+    title: 'AI Agents & Automation',
+    text: 'Python · AI assistants & agents · Local LLMs (Ollama) · Workflow automation · Prompt engineering',
+    glyph: 'bot',
+  },
+  {
+    title: 'Software & Web Development',
+    text: 'TypeScript · JavaScript · React · C / C++ · Java · HTML · CSS · REST APIs · Next.js',
+    glyph: 'code',
+  },
+  {
+    title: 'Security Tooling & Data',
+    text: 'SAST · SBOM / SARIF · Burp Suite · SQL · Supabase · Git & GitHub · n8n',
+    glyph: 'wrench',
+  },
 ]
-const countries = [
-  { value: 'uae', label: 'United Arab Emirates (UAE)' },
-  { value: 'other', label: 'Other country / international role' },
-  { value: 'india', label: 'India' },
+
+const techCloud = [
+  'Python', 'TypeScript', 'JavaScript', 'C', 'C++', 'Java', 'HTML', 'CSS', 'SQL',
+  'React', 'Next.js', 'REST APIs', 'TensorFlow', 'AI Agents', 'Ollama', 'n8n',
+  'Supabase', 'Git / GitHub', 'Burp Suite', 'Cybersecurity', 'Bug Bounty',
 ]
+
+const githubAchievements = ['Pull Shark ×4', 'Galaxy Brain ×4', 'Starstruck', 'YOLO', 'Quickdraw']
+
+type Book = { title: string; note: string; url?: string }
+
+const trilogy: Book[] = [
+  {
+    title: 'Secure The Future — Vol. 1 (2023 Edition, Expanded)',
+    note: 'Level 1 · Basic — the beginner-friendly foundation of cybersecurity, expanded to 15 chapters.',
+    url: 'https://payhip.com/b/J42Le',
+  },
+  {
+    title: 'Secure The Future — Vol. 2 (2025 Edition)',
+    note: 'Level 2 · Intermediate — deeper practice across security and everyday digital life.',
+    url: 'https://payhip.com/b/Gwnq1',
+  },
+  {
+    title: 'Secure The Future — Vol. 3 (2027 Edition)',
+    note: 'Level 3 · Advanced — the final volume of the trilogy, completing the journey.',
+    url: 'https://payhip.com/b/xRmnW',
+  },
+]
+
+const featuredBooks: Book[] = [
+  {
+    title: 'The Honest Report',
+    note: 'How to write bug bounty reports that get accepted — evidence, severity, impact and fixes.',
+    url: 'https://payhip.com/b/viqzZ',
+  },
+  {
+    title: 'Bug Bounty from Scratch',
+    note: 'Your first 90 days as a security researcher — a full-edition, start-to-finish guide.',
+    url: 'https://payhip.com/b/5xBDz',
+  },
+  {
+    title: 'Cybersecurity from Zero',
+    note: "A student's first guide to cybersecurity — from the basics to a working foundation.",
+    url: 'https://payhip.com/b/lWHCt',
+  },
+]
+
+const moreBooks: string[] = [
+  'Stay Safe Online',
+  'Networking for Security Beginners',
+  'How Hackers Think',
+  'Digital Privacy in Daily Life',
+  'Web Hacking Practice',
+  'API Security for Beginners',
+  'Recon & Mapping',
+  'Python for Security',
+  'Linux for Students & Hackers',
+  'AI Agents for Beginners',
+  'Git, GitHub & Achievements',
+  'Burp Suite & Browser Tools',
+  'Career Roadmap for Indian Students',
+  'Certificates, CEH or Skills? — A Straight Talk',
+  'Building in Public',
+  'Side Income for Tech Students',
+]
+
+type JourneyItem = { period: string; role: string; detail: string }
+
+const journeyNow: JourneyItem[] = [
+  {
+    period: 'OCT 2023 — PRESENT',
+    role: 'Founder · Cheakstar Private Limited',
+    detail:
+      'Building my own work: AI agents, automation, software development and cybersecurity products under my own company.',
+  },
+  {
+    period: '2023 — 2026',
+    role: 'BCA Graduate · UEM Jaipur',
+    detail: 'Bachelor of Computer Applications — the formal foundation under everything I build.',
+  },
+  {
+    period: 'MAR 2025 — JUL 2026',
+    role: 'Operations & Challenge Lead · HackSec',
+    detail: 'Running CTF-style challenges and events for the cybersecurity community at UEM Jaipur.',
+  },
+  {
+    period: 'JAN 2025 — JUL 2026',
+    role: 'Club Head · PICXL Photography Club',
+    detail: 'Leading the university photography club — team, events and creative direction.',
+  },
+  {
+    period: 'SEP 2025 — JUL 2026',
+    role: 'Event Coordinator · The CIRCLE Design Studio, UEM Jaipur',
+    detail: 'Coordinating design and creative events on campus.',
+  },
+  {
+    period: 'SEP 2020 — PRESENT',
+    role: 'Office Associate · The Last Hope',
+    detail: 'Supporting operations, relief drives and community initiatives at a social welfare organisation.',
+  },
+]
+
+const journeyEarlier: JourneyItem[] = [
+  { period: 'MAY 2024 — OCT 2024', role: 'Cyber Security Intern · JPMorgan Chase & Co.', detail: 'Cybersecurity internship, as listed on my LinkedIn profile.' },
+  { period: 'JUL 2024 — SEP 2024', role: 'Investment Banking Intern · Bank of America', detail: 'Experience entry as listed on my LinkedIn profile.' },
+  { period: 'FEB 2024 — JUL 2024', role: 'IAM Developer · Tata Group', detail: 'Identity and access management development, as listed on my LinkedIn profile.' },
+  { period: 'DEC 2023 — MAY 2024', role: 'Software & Web Developer · Tata Group', detail: 'Web applications, backend functionality, REST API integration, database work, debugging and deployment.' },
+  { period: 'APR 2023 — JUN 2023', role: 'Software Engineer Intern · Walmart', detail: 'Software engineering internship, as listed on my LinkedIn profile.' },
+  { period: 'JUL 2022 — DEC 2022', role: 'EV Engineering · Ford Technology Services India', detail: 'Experience entry as listed on my LinkedIn profile.' },
+  { period: 'FEB 2022 — JUN 2023', role: 'Social Media Manager · ZEE5', detail: 'Experience entry as listed on my LinkedIn profile.' },
+  { period: '2020 — 2023', role: 'B.Sc · University of Rajasthan', detail: 'Science, as listed on my LinkedIn profile.' },
+  { period: '2020', role: 'RS-CIT · Vardhman Mahaveer Open University', detail: 'Computer Information Technology.' },
+]
+
+/* ---------------------------------- icons --------------------------------- */
+
+function Icon({ name }: { name: string }) {
+  const common = {
+    width: 22,
+    height: 22,
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 1.7,
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+    'aria-hidden': true,
+  }
+  switch (name) {
+    case 'shield':
+      return (<svg {...common}><path d="M12 3l7 2.8v5.4c0 4.4-2.9 7.4-7 9.3-4.1-1.9-7-4.9-7-9.3V5.8z" /><polyline points="9 11.5 11.2 13.7 15.2 9.7" /></svg>)
+    case 'bot':
+      return (<svg {...common}><rect x="4" y="8" width="16" height="11" rx="2.5" /><line x1="12" y1="8" x2="12" y2="4" /><circle cx="12" cy="3.4" r="1" /><circle cx="9" cy="13" r="0.6" fill="currentColor" /><circle cx="15" cy="13" r="0.6" fill="currentColor" /><line x1="9" y1="16.4" x2="15" y2="16.4" /></svg>)
+    case 'code':
+      return (<svg {...common}><polyline points="8 7 3.5 12 8 17" /><polyline points="16 7 20.5 12 16 17" /><line x1="13.6" y1="5" x2="10.4" y2="19" /></svg>)
+    case 'wrench':
+      return (<svg {...common}><path d="M14.7 6.3a4.2 4.2 0 0 1 5.6-3.9L17.6 5l1 1 2.7-2.7a4.2 4.2 0 0 1-5.5 5.6L8 16.7a2 2 0 0 1-2.8 0l-2.4-2.4a2 2 0 0 1 0-2.8z" transform="translate(-1.6 1.6) scale(0.94)" /></svg>)
+    case 'play':
+      return (<svg {...common} fill="currentColor" stroke="none"><polygon points="7 4.5 19 12 7 19.5" /></svg>)
+    case 'book':
+      return (<svg {...common}><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z" /><path d="M5 19.5A1.5 1.5 0 0 1 6.5 18H19v3H6.5" /></svg>)
+    case 'mail':
+      return (<svg {...common}><rect x="3" y="5.5" width="18" height="13" rx="2" /><polyline points="3.5 7 12 13 20.5 7" /></svg>)
+    case 'arrow':
+      return (<svg {...common}><line x1="6" y1="18" x2="18" y2="6" /><polyline points="9 6 18 6 18 15" /></svg>)
+    case 'award':
+      return (<svg {...common}><circle cx="12" cy="9" r="5.5" /><polyline points="8.8 13.5 7.5 20.5 12 17.8 16.5 20.5 15.2 13.5" /></svg>)
+    default:
+      return (<svg {...common}><circle cx="12" cy="12" r="8" /></svg>)
+  }
+}
+
+/* ------------------------------- components ------------------------------- */
+
+function Reveal({ children, delay = 0, className = '' }: { children: ReactNode; delay?: number; className?: string }) {
+  return (
+    <div className={`reveal ${className}`} style={{ transitionDelay: `${delay}ms` }}>
+      {children}
+    </div>
+  )
+}
+
+function SectionHead({ eyebrow, title, lead }: { eyebrow: string; title: ReactNode; lead?: string }) {
+  return (
+    <Reveal>
+      <div className="section-head">
+        <span className="eyebrow">{eyebrow}</span>
+        <h2>{title}</h2>
+        {lead ? <p>{lead}</p> : null}
+      </div>
+    </Reveal>
+  )
+}
+
+function ProjectCard({ project, delay }: { project: Project; delay: number }) {
+  return (
+    <Reveal delay={delay}>
+      <article className={`card project-card${project.flagship ? ' is-flagship' : ''}`}>
+        <div className="card-top">
+          <span className="card-category">{project.category}</span>
+          <span className={`status-pill${project.flagship ? ' gold' : ''}`}>{project.status}</span>
+        </div>
+        <h3>{project.title}</h3>
+        <p>{project.description}</p>
+        <div className="tags">{project.tags.map((t) => <span key={t}>{t}</span>)}</div>
+        {project.url ? (
+          <a className="card-link" href={project.url} target="_blank" rel="noreferrer">
+            View on GitHub <Icon name="arrow" />
+          </a>
+        ) : (
+          <span className="card-note">Private build · details on request</span>
+        )}
+      </article>
+    </Reveal>
+  )
+}
+
+function BookCard({ book, delay, label }: { book: Book; delay: number; label: string }) {
+  return (
+    <Reveal delay={delay}>
+      <article className="card book-card">
+        <span className="card-category">{label}</span>
+        <h3>{book.title}</h3>
+        <p>{book.note}</p>
+        {book.url ? (
+          <a className="card-link" href={book.url} target="_blank" rel="noreferrer">
+            Get the book <Icon name="arrow" />
+          </a>
+        ) : null}
+      </article>
+    </Reveal>
+  )
+}
+
+/* ----------------------------------- app ----------------------------------- */
+
 function App() {
-  const [intro, setIntro] = useState(true)
-  const [selected, setSelected] = useState<Project | null>(null)
-  const [showAllProjects, setShowAllProjects] = useState(false)
-  const [showAllExperience, setShowAllExperience] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [country, setCountry] = useState('uae')
-  const reduceMotion = useReducedMotion()
+  const [progress, setProgress] = useState(0)
 
   useEffect(() => {
-    if (reduceMotion) setIntro(false)
-    const timer = window.setTimeout(() => setIntro(false), reduceMotion ? 0 : 3500)
-    return () => window.clearTimeout(timer)
-  }, [reduceMotion])
+    const onScroll = () => {
+      const el = document.documentElement
+      const max = el.scrollHeight - el.clientHeight
+      setProgress(max > 0 ? Math.min(1, el.scrollTop / max) : 0)
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   useEffect(() => {
-    if (!selected) return
-    const onKeyDown = (event: KeyboardEvent) => { if (event.key === 'Escape') setSelected(null) }
-    window.addEventListener('keydown', onKeyDown)
-    document.body.style.overflow = 'hidden'
-    return () => { window.removeEventListener('keydown', onKeyDown); document.body.style.overflow = '' }
-  }, [selected])
+    const targets = Array.from(document.querySelectorAll<HTMLElement>('.reveal'))
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced || !('IntersectionObserver' in window)) {
+      targets.forEach((t) => t.classList.add('in'))
+      return
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in')
+            observer.unobserve(entry.target)
+          }
+        })
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -6% 0px' },
+    )
+    targets.forEach((t) => observer.observe(t))
+    return () => observer.disconnect()
+  }, [])
+
   const closeMenu = () => setMenuOpen(false)
 
   return (
-    <div className="series-site">
-      <div className="film-grain" aria-hidden="true" />
-      <AnimatePresence>
-        {intro && <motion.div className="opening" key="opening" initial={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.04, filter: 'blur(12px)' }} transition={{ duration: 0.8 }}>
-          <div className="opening-light" />
-          <motion.p className="opening-studio" initial={{ opacity: 0, letterSpacing: '0.9em' }} animate={{ opacity: 1, letterSpacing: '0.42em' }} transition={{ duration: 1.2 }}>ROHIT KUMAR CHANDOLIYA · PORTFOLIO</motion.p>
-          <motion.div className="opening-title" initial={{ opacity: 0, y: 24, scale: 1.12 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: 0.35, duration: 1.1 }}><span>ROHIT</span><b>KUMAR CHANDOLIYA</b></motion.div>
-          <motion.p className="opening-caption" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.15 }}>AI · SOFTWARE · AUTOMATION · SECURITY</motion.p>
-          <button className="opening-play" onClick={() => setIntro(false)}><Play size={16} fill="currentColor" /> ENTER EXPERIENCE <span>↗</span></button>
-          <button className="skip-intro" onClick={() => setIntro(false)}>SKIP INTRO</button>
-        </motion.div>}
-      </AnimatePresence>
+    <div className="site">
+      <div className="scroll-progress" style={{ transform: `scaleX(${progress})` }} aria-hidden="true" />
 
-      <header className="series-nav">
-        <a className="series-brand" href="#home" onClick={closeMenu}><span className="brand-n">R<span>.</span></span><span className="brand-words">ROHIT <small>KUMAR CHANDOLIYA</small></span></a>
-        <button className="mobile-menu" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle navigation">{menuOpen ? <X /> : <span>☰</span>}</button>
-        <nav className={menuOpen ? 'series-links is-open' : 'series-links'} aria-label="Main navigation">
-          <a href="#home" onClick={closeMenu}>Home</a><a href="#originals" onClick={closeMenu}>Projects</a><a href="#career" onClick={closeMenu}>Experience</a><a href="#mobility" onClick={closeMenu}>Relocation</a><a className="nav-connect" href="#contact" onClick={closeMenu}>Contact <ArrowUpRight size={14} /></a>
+      <header className="nav">
+        <a className="brand" href="#home" onClick={closeMenu}>
+          <span className="brand-mark">R<span>.</span></span>
+          <span className="brand-words">ROHIT<small>KUMAR CHANDOLIYA</small></span>
+        </a>
+        <button
+          className="menu-btn"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle navigation"
+          aria-expanded={menuOpen}
+        >
+          {menuOpen ? '✕' : '☰'}
+        </button>
+        <nav className={menuOpen ? 'nav-links is-open' : 'nav-links'} aria-label="Main navigation">
+          <a href="#about" onClick={closeMenu}>About</a>
+          <a href="#skills" onClick={closeMenu}>Skills</a>
+          <a href="#projects" onClick={closeMenu}>Projects</a>
+          <a href="#books" onClick={closeMenu}>Books</a>
+          <a href="#byteshield" onClick={closeMenu}>ByteShield</a>
+          <a href="#journey" onClick={closeMenu}>Journey</a>
+          <a className="nav-cta" href="#contact" onClick={closeMenu}>Contact</a>
         </nav>
       </header>
 
       <main>
-        <section className="series-hero" id="home">
-          <div className="hero-backdrop" /><div className="hero-vignette" /><div className="hero-ambient hero-ambient-one" /><div className="hero-ambient hero-ambient-two" />
-          <div className="hero-vertical-label">AI · SOFTWARE · AUTOMATION · SECURITY</div>
-          <motion.div className="hero-content" initial={reduceMotion ? false : { opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: intro ? 3.1 : 0.15 }}>
-            <div className="series-kicker"><span className="live-dot" /> AVAILABLE IMMEDIATELY <span className="kicker-line" /> 2026</div>
-            <div className="hero-series-mark"><b>AI · SOFTWARE · AUTOMATION · CYBERSECURITY</b></div>
-            <h1>Curiosity<br />in <em>production.</em></h1>
-            <p className="hero-description">I’m Rohit Kumar Chandoliya — a Computer Science graduate and builder working across AI, automation, software engineering, and application security. I turn ideas into systems, test them, and keep improving.</p>
-            <div className="hero-meta"><span className="meta-match">AVAILABLE IMMEDIATELY</span><span>JAIPUR, INDIA</span><span className="meta-rating">UAE + INTERNATIONAL</span></div>
-            <div className="hero-buttons"><a className="hero-play" href="#originals"><Play size={18} fill="currentColor" /> Explore my work</a><a className="hero-more" href="#contact"><Mail size={16} /> Contact me</a><a className="hero-more" href="mailto:rohitkchandoliya@gmail.com?subject=Resume%20Request"><BookOpen size={16} /> Request resume</a></div>
-            <div className="hero-foot">BCA · UEM JAIPUR · 2026 <span /> OPEN TO RELEVANT ROLES</div>
-          </motion.div>
-          <div className="hero-art hero-art-profile" aria-label="Animated three-dimensional AI systems visualization">
-            <div className="system-scene" aria-hidden="true">
-              <div className="system-grid" />
-              <div className="system-orbit system-orbit-one"><span /></div>
-              <div className="system-orbit system-orbit-two"><span /></div>
-              <div className="system-orbit system-orbit-three"><span /></div>
-              <div className="system-core"><div className="core-face">R<span>.</span></div><span className="core-ring" /></div>
-              <div className="system-node node-ai"><Sparkles size={18}/><span>AI SYSTEMS</span></div>
-              <div className="system-node node-code"><Code2 size={18}/><span>SOFTWARE</span></div>
-              <div className="system-node node-sec"><ShieldCheck size={18}/><span>APP SECURITY</span></div>
-              <div className="system-node node-flow"><Zap size={18}/><span>AUTOMATION</span></div>
-              <div className="system-caption">DESIGN <i>→</i> BUILD <i>→</i> VERIFY</div>
+        {/* ------------------------------- HERO ------------------------------- */}
+        <section className="hero" id="home">
+          <div className="hero-glow glow-one" aria-hidden="true" />
+          <div className="hero-glow glow-two" aria-hidden="true" />
+          <div className="hero-inner">
+            <div className="hero-copy">
+              <Reveal>
+                <span className="eyebrow light"><span className="live-dot" /> FOUNDER @ CHEAKSTAR · JAIPUR, INDIA</span>
+              </Reveal>
+              <Reveal delay={90}>
+                <h1>Rohit Kumar <em>Chandoliya</em></h1>
+              </Reveal>
+              <Reveal delay={180}>
+                <p className="hero-headline">
+                  Founder @ Cheakstar | Bug Bounty Hunter &amp; Cybersecurity Researcher |
+                  AI Agents &amp; Automation | Building AI Security Tools
+                </p>
+              </Reveal>
+              <Reveal delay={260}>
+                <p className="hero-text">
+                  I build my own work: AI security tools that hunt bugs end-to-end, a cybersecurity
+                  book series read by students, and ByteShield — a channel teaching Python and
+                  security to the world. No boss, no shortcuts — just building, testing and shipping.
+                </p>
+              </Reveal>
+              <Reveal delay={340}>
+                <div className="hero-actions">
+                  <a className="btn btn-gold" href="#projects">Explore my work</a>
+                  <a className="btn btn-ghost" href={LINKS.store} target="_blank" rel="noreferrer">
+                    <Icon name="book" /> My bookstore
+                  </a>
+                </div>
+              </Reveal>
+              <Reveal delay={420}>
+                <div className="hero-facts">
+                  <span>BCA Graduate</span><i />
+                  <span>Author — Secure The Future series</span><i />
+                  <span>30 GitHub repositories</span>
+                </div>
+              </Reveal>
             </div>
+            <Reveal delay={240} className="hero-visual-wrap">
+              <figure className="hero-visual">
+                <img src="/images/portfolio-hero.webp" alt="Rohit Kumar Chandoliya at his security workstation" width={480} height={270} />
+                <figcaption>
+                  <span><Icon name="shield" /> Bug Bounty</span>
+                  <span><Icon name="bot" /> AI Agents</span>
+                  <span><Icon name="book" /> Author</span>
+                </figcaption>
+              </figure>
+            </Reveal>
           </div>
-          <a className="hero-scroll" href="#continue"><span>SCROLL TO EXPLORE</span><ArrowDown size={13} /></a><div className="hero-fade" />
+          <a className="scroll-hint" href="#about">SCROLL<span>↓</span></a>
         </section>
 
-        <section className="continue-section" id="continue">
-          <div className="rail-heading"><div><span className="rail-eyebrow">THE STORY SO FAR</span><h2>Explore the universe</h2></div></div>
-          <div className="poster-rail explore-rail">
-            {[
-              { no: '01', title: 'Selected Projects', sub: 'Things I build', target: '#originals', palette: 'poster-originals', glyph: '01' },
-              { no: '02', title: 'Career Timeline', sub: 'Experience & education', target: '#career', palette: 'poster-about', glyph: 'CV' },
-              { no: '03', title: 'The Toolkit', sub: 'Technical capabilities', target: '#skills', palette: 'poster-skills', glyph: '{ }' },
-              { no: '04', title: 'Global Opportunities', sub: 'Hiring & relocation details', target: '#mobility', palette: 'poster-contact', glyph: '↗' },
-            ].map(item => <a href={item.target} className="explore-card" key={item.no}><div className={'explore-art ' + item.palette}><span className="explore-glyph">{item.glyph}</span><span className="explore-no">CHAPTER {item.no}</span><span className="explore-play"><Play size={16} fill="currentColor" /></span></div><strong>{item.title}</strong><span>{item.sub}</span></a>)}
+        <div className="ticker" aria-hidden="true">
+          <div className="ticker-track">
+            {['BUG BOUNTY', 'AI SECURITY TOOLS', 'CYBERSECURITY RESEARCH', 'AI AGENTS', 'AUTOMATION', 'PYTHON', 'BOOKS', 'BYTESHIELD'].map((w) => (
+              <span key={`a-${w}`}>{w}<b>◆</b></span>
+            ))}
+            {['BUG BOUNTY', 'AI SECURITY TOOLS', 'CYBERSECURITY RESEARCH', 'AI AGENTS', 'AUTOMATION', 'PYTHON', 'BOOKS', 'BYTESHIELD'].map((w) => (
+              <span key={`b-${w}`}>{w}<b>◆</b></span>
+            ))}
           </div>
-        </section>
+        </div>
 
-        <section className="originals-section" id="originals">
-          <div className="section-topline"><span className="red-dash" /> SELECTED PROJECTS <span className="topline-season">SOURCE-LINKED PROJECT FILES</span></div>
-          <div className="originals-title-row"><div><h2>Ideas made <em>tangible.</em></h2><p>Explore the source code and current project notes. Status and scope are kept honest—no invented metrics or inflated claims.</p></div></div>
-          <div className="poster-rail project-rail">
-            {projects.slice(0, 4).map((project, index) => <motion.button type="button" key={project.id} className="project-poster" onClick={() => setSelected(project)} initial={reduceMotion ? false : { opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: 0.55, delay: index * 0.06 }}>
-              <div className={'poster-art poster-' + project.palette}><div className="poster-topline"><span>R ORIGINAL</span><span>EP. {project.id}</span></div><div className="poster-halo" /><span className="poster-symbol">{project.symbol}</span><div className="poster-art-title"><span>{project.category}</span><strong>{project.title}</strong></div><span className="poster-play"><Play size={19} fill="currentColor" /></span><span className="poster-corner">{project.id}</span></div>
-              <div className="poster-info"><div className="poster-info-top"><span className="poster-match">SOURCE LINKED</span><span>{project.status}</span></div><h3>{project.title}</h3><p>{project.synopsis}</p><div className="poster-tags">{project.tags.slice(0, 3).map(tag => <span key={tag}>{tag}</span>)}</div><div className="poster-view">VIEW PROJECT <ArrowUpRight size={14} /></div></div>
-            </motion.button>)}
+        {/* ------------------------------- ABOUT ------------------------------ */}
+        <section className="section" id="about">
+          <SectionHead eyebrow="ABOUT" title={<>Building my own <em>road.</em></>} />
+          <div className="about-grid">
+            <Reveal>
+              <div className="about-copy">
+                <p>
+                  I&apos;m Rohit Kumar Chandoliya — a BCA graduate and the founder of
+                  <strong> Cheakstar Private Limited</strong>. Instead of waiting for a job, I chose
+                  to build my own work from home: bug bounty hunting, AI security tooling, and
+                  cybersecurity books that teach students the way I wish I had been taught.
+                </p>
+                <p>
+                  My main weapon is the <strong>AI Bug Hunter</strong> — an automated system that
+                  analyses software and authorised targets the way an experienced ethical hacker
+                  would: recon, mapping, testing, verification, and reports with real evidence.
+                  Alongside it, I run the <strong>Secure The Future</strong> book programme and
+                  the <strong>ByteShield</strong> channel.
+                </p>
+                <p>
+                  The rule behind everything: a vulnerability counts only with sufficient
+                  evidence, a claim counts only when it is verified, and security work happens
+                  only where there is permission.
+                </p>
+              </div>
+            </Reveal>
+            <Reveal delay={120}>
+              <div className="fact-panel">
+                <div className="fact"><span>EDUCATION</span><strong>BCA · UEM Jaipur</strong></div>
+                <div className="fact"><span>COMPANY</span><strong>Founder · Cheakstar Private Limited</strong></div>
+                <div className="fact"><span>CERTIFICATE</span><strong>Certified Ethical Hacker (CEH)</strong></div>
+                <div className="fact"><span>BASED IN</span><strong>Jaipur, India</strong></div>
+                <div className="fact"><span>LANGUAGES</span><strong>Hindi (Native) · English (Elementary)</strong></div>
+                <div className="achievement">
+                  <Icon name="award" />
+                  <p><strong>2nd Place</strong><small>UEM International Conference · Certificate Automation System</small></p>
+                </div>
+              </div>
+            </Reveal>
           </div>
-          <div className="projects-view-all-row"><span>SHOWING 4 OF {projects.length} PROJECTS</span><button className="inline-cta" onClick={() => setShowAllProjects(true)}>View all projects <ArrowUpRight size={15}/></button></div>
-          <div className="rail-bottom-note"><span>ROHIT / PROJECTS</span><span>REAL REPOSITORIES · TRANSPARENT PROGRESS</span></div>
-        </section>
-
-        <section className="featured-section" id="career">
-          <div className="featured-visual" aria-label="Abstract software architecture visualization"><div className="career-visual-grid" /><span className="featured-index">CAREER FILE / 001</span><div className="career-visual-window"><div className="career-window-top"><i/><i/><i/><span>career / systems.log</span></div><div className="career-code-lines"><b>01</b><span>build</span><em> reliable systems</em><b>02</b><span>automate</span><em> repeatable work</em><b>03</b><span>secure</span><em> the workflow</em></div><div className="career-window-footer"><span>STATUS</span><strong><i/> CONTINUOUSLY IMPROVING</strong></div></div><div className="career-orbit career-orbit-a"/><div className="career-orbit career-orbit-b"/><div className="featured-side-note">LEARN · SHIP · IMPROVE</div></div>
-          <div className="featured-copy"><span className="section-eyebrow">EXPERIENCE & EDUCATION</span><h2>Grounded in<br /><em>real work.</em></h2>
-            <div className="career-list">
-              <div className="career-item"><span className="career-date">FOUNDER · OCTOBER 2023 — PRESENT</span><strong>CheakStar Private Limited</strong><p>Technology entrepreneurship across AI agents, automation, software development, cybersecurity, product development, client solutions and business development.</p></div>
-              <div className="career-item"><span className="career-date">APRIL 2023 — JUNE 2023 · LINKEDIN ENTRY</span><strong>Software Engineer Intern · Walmart</strong><p>Software engineering internship, as listed in the LinkedIn profile. A separate resume contains a different Walmart date/title entry; both source records are retained pending your confirmation.</p></div>
-              <div className="career-item"><span className="career-date">FEBRUARY 2024 — JULY 2024 · LINKEDIN ENTRY</span><strong>IAM Developer · Tata Group</strong><p>Identity and access management development, as listed in the LinkedIn profile. A separate resume has different dates/title wording; both source records are retained pending your confirmation.</p></div>
-              <div className="career-item"><span className="career-date">MAY 2024 — OCTOBER 2024</span><strong>Cyber Security Intern · JPMorgan Chase &amp; Co.</strong><p>Cybersecurity internship, United States, as listed in the LinkedIn profile.</p></div>
-              <div className="career-item"><span className="career-date">JULY 2024 — SEPTEMBER 2024</span><strong>Investment Banking Intern · Bank of America</strong><p>Investment banking experience listed in the LinkedIn profile; the job simulation is separately listed under credentials.</p></div>
-              <div className="career-item"><span className="career-date">DECEMBER 2023 — MAY 2024 · RESUME ENTRY</span><strong>Software &amp; Web Developer · Tata Group</strong><p>Web applications, backend functionality, REST API integration, database work, debugging and deployment, as described in the resume.</p></div>
-              <div className="career-item"><span className="career-date">SEPTEMBER 2020 — PRESENT</span><strong>Office Associate · The Last Hope</strong><p>Role and dates as listed in the LinkedIn profile.</p></div>
-              <div className="career-item"><span className="career-date">JULY 2022 — DECEMBER 2022</span><strong>EV Engineering · Ford Technology Services India</strong><p>Experience entry as listed in the LinkedIn profile.</p></div>
-              <div className="career-item"><span className="career-date">FEBRUARY 2022 — JUNE 2023</span><strong>Social Media Manager · ZEE5</strong><p>Experience entry as listed in the LinkedIn profile.</p></div>
-              <div className="career-item"><span className="career-date">SEPTEMBER 2025 — JULY 2026</span><strong>Event Coordinator · The CIRCLE Design Studio, UEM Jaipur</strong><p>Campus event coordination experience as listed in the LinkedIn profile.</p></div>
-              <div className="career-item"><span className="career-date">MARCH 2025 — JULY 2026</span><strong>Operations &amp; Challenge Lead · HackSec</strong><p>Cybersecurity community operations and challenge leadership as listed in the LinkedIn profile.</p></div>
-              <div className="career-item"><span className="career-date">JANUARY 2025 — JULY 2026</span><strong>Club Head · PICXL Photography Club</strong><p>Club leadership experience as listed in the LinkedIn profile.</p></div>
-              <div className="career-item"><span className="career-date">EDUCATION · JULY 2023 — JULY 2026</span><strong>Bachelor of Computer Applications · UEM Jaipur</strong><p>Computer Science; completed July 2026 according to the LinkedIn profile.</p></div>
-              <div className="career-item"><span className="career-date">ADDITIONAL EDUCATION · JUNE 2020 — JUNE 2023</span><strong>Bachelor of Science · University of Rajasthan</strong><p>Science, as listed in the LinkedIn profile.</p></div>
-              <div className="career-item"><span className="career-date">2020</span><strong>RS-CIT · Vardhman Mahaveer Open University</strong><p>Computer Information Technology, as listed in the LinkedIn profile.</p></div>
+          <Reveal delay={80}>
+            <div className="badge-row">
+              <span className="badge-label">GITHUB ACHIEVEMENTS</span>
+              {githubAchievements.map((b) => <span className="badge" key={b}>{b}</span>)}
             </div>
-            <button className="inline-cta experience-view-all" onClick={() => setShowAllExperience(true)}>View all experience &amp; education <ArrowUpRight size={15}/></button>
-            <div className="profile-detail-grid">
-              <div className="profile-detail-card"><span className="section-eyebrow">CERTIFICATIONS &amp; LEARNING</span><ul><li>Certified Ethical Hacker (CEH) — listed in LinkedIn profile; verification pending.</li><li>Cambridge English Test — listed in LinkedIn profile; verification pending.</li><li>Event Volunteer · CyberHunt.</li><li>Bug Bounty — profile-listed credential/experience; scope not specified.</li><li>Bank of America · Investment Banking Job Simulation.</li></ul></div>
-              <div className="profile-detail-card"><span className="section-eyebrow">HONORS &amp; PUBLICATIONS</span><ul><li>Best Cybersecurity Education Provider — LinkedIn profile award listing; issuer/date not specified in the PDF.</li><li>2nd place · UEM international conference — Certificate Automation System, as stated in the resume.</li><li>Author of <em>Secure The Future</em> — publication listed in LinkedIn profile.</li></ul></div>
+          </Reveal>
+        </section>
+
+        {/* ------------------------------- SKILLS ------------------------------ */}
+        <section className="section alt" id="skills">
+          <SectionHead
+            eyebrow="SKILLS"
+            title={<>The <em>toolkit.</em></>}
+            lead="Depth varies by project — the work itself is the evidence."
+          />
+          <div className="grid grid-4">
+            {skills.map((s, i) => (
+              <Reveal key={s.title} delay={i * 80}>
+                <article className="card skill-card">
+                  <span className="skill-icon"><Icon name={s.glyph} /></span>
+                  <h3>{s.title}</h3>
+                  <p>{s.text}</p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal delay={100}>
+            <div className="tech-cloud">
+              {techCloud.map((t) => <span key={t}>{t}</span>)}
             </div>
-            <div className="resume-actions"><a className="inline-cta" href="mailto:rohitkchandoliya@gmail.com?subject=AI%20%26%20Automation%20Resume%20Request">AI &amp; Automation Resume <Mail size={15} /></a><a className="inline-cta" href="mailto:rohitkchandoliya@gmail.com?subject=Software%20Engineering%20Resume%20Request">Software Engineering Resume <Mail size={15} /></a></div>
+          </Reveal>
+        </section>
+
+        {/* ------------------------------ PROJECTS ----------------------------- */}
+        <section className="section" id="projects">
+          <SectionHead
+            eyebrow="PROJECTS"
+            title={<>Things I have <em>built.</em></>}
+            lead="The flagship security tools come first — then the public repositories. No invented metrics, no inflated claims."
+          />
+          <div className="grid grid-3">
+            {flagshipProjects.map((p, i) => <ProjectCard key={p.title} project={p} delay={i * 80} />)}
+          </div>
+          <div className="grid grid-3 second-row">
+            {repoProjects.map((p, i) => <ProjectCard key={p.title} project={p} delay={i * 60} />)}
+          </div>
+          <Reveal delay={60}>
+            <p className="section-foot">
+              More experiments live on GitHub →{' '}
+              <a href={LINKS.github} target="_blank" rel="noreferrer">github.com/rohitkrchandoliya</a>
+            </p>
+          </Reveal>
+        </section>
+
+        {/* -------------------------------- BOOKS ------------------------------ */}
+        <section className="section alt" id="books">
+          <SectionHead
+            eyebrow="BOOKS · SECURE THE FUTURE"
+            title={<>Books I have <em>written.</em></>}
+            lead="Original cybersecurity books — from a beginner's first steps to honest, evidence-based bug bounty reporting. All titles are available in my Payhip store."
+          />
+          <div className="grid grid-3">
+            {trilogy.map((b, i) => <BookCard key={b.title} book={b} delay={i * 80} label="THE TRILOGY" />)}
+          </div>
+          <div className="grid grid-3 second-row">
+            {featuredBooks.map((b, i) => <BookCard key={b.title} book={b} delay={i * 80} label="FEATURED" />)}
+          </div>
+          <Reveal delay={80}>
+            <div className="more-books">
+              <span className="badge-label">ALSO IN THE STORE — FULL-EDITION TITLES</span>
+              <div className="more-books-list">
+                {moreBooks.map((t) => <span key={t}>{t}</span>)}
+              </div>
+              <p>
+                Plus the Bug Bounty Report Template Pack and Cybersecurity Starter Notes.{' '}
+                <a href={LINKS.store} target="_blank" rel="noreferrer">Visit the bookstore →</a>
+              </p>
+            </div>
+          </Reveal>
+        </section>
+
+        {/* ----------------------------- BYTESHIELD ---------------------------- */}
+        <section className="section" id="byteshield">
+          <div className="byteshield-panel">
+            <Reveal>
+              <div className="byteshield-copy">
+                <span className="eyebrow">YOUTUBE · BYTESHIELD</span>
+                <h2>ByteShield — learn security, <em>one video at a time.</em></h2>
+                <p>
+                  ByteShield is my YouTube channel: evergreen Python and cybersecurity how-tos in
+                  English, made for a worldwide audience. A new Short goes out every day, with
+                  long-form lessons twice a week — researched from official sources and
+                  triple-checked before anything is published.
+                </p>
+                <div className="hero-actions">
+                  <a className="btn btn-gold" href={LINKS.youtube} target="_blank" rel="noreferrer">
+                    <Icon name="play" /> Watch on YouTube
+                  </a>
+                  <a className="btn btn-ghost" href={LINKS.instagramChannel} target="_blank" rel="noreferrer">
+                    @byteshieldtv on Instagram
+                  </a>
+                </div>
+              </div>
+            </Reveal>
+            <Reveal delay={140}>
+              <div className="byteshield-stats">
+                <div><strong>Daily</strong><span>Shorts on YouTube, Instagram &amp; Facebook</span></div>
+                <div><strong>2× / week</strong><span>Long-form Python &amp; security lessons</span></div>
+                <div><strong>English</strong><span>Made for a worldwide audience</span></div>
+              </div>
+            </Reveal>
           </div>
         </section>
 
-        <section className="story-section" id="about">
-          <div className="story-art story-photo-art" aria-label="Software engineering and cybersecurity illustration"><div className="story-art-ring" /><div className="about-system-scene"><div className="about-window"><div className="about-window-top"><i/><i/><i/><span>rohit / build-notes</span></div><div className="about-code"><b>const</b> idea = <em>"problem"</em><br/><b>await</b> build(idea)<br/><b>return</b> <strong>workingSystem</strong></div><div className="about-progress"><span/><span/><span/><span/><span/><span/><span/></div></div><div className="about-float-card about-float-ai"><Sparkles size={17}/><span>AI / AGENTS</span></div><div className="about-float-card about-float-sec"><ShieldCheck size={17}/><span>SECURITY</span></div><div className="about-circuit about-circuit-one"/><div className="about-circuit about-circuit-two"/></div><span className="story-signature">FOUNDER · CHEAKSTAR</span><span className="story-stamp">AI · SOFTWARE<br /><b>AUTOMATION · SECURITY</b></span></div>
-          <div className="story-copy"><span className="section-eyebrow">CHAPTER 01 · THE PERSON</span><h2>Build with<br /><em>purpose.</em></h2><p>I’m Rohit Kumar Chandoliya, a Computer Science graduate, Founder at Cheakstar, and an early-career software engineer interested in AI, automation, backend/web development, and cybersecurity.</p><p>I enjoy taking problems from idea to implementation—breaking them down, connecting systems, testing assumptions, documenting what works, and improving the result.</p><div className="achievement-chip"><Award size={18} /><span><strong>2nd Place</strong><small>UEM International Conference · Certificate Automation System</small></span></div><div className="achievement-chip"><BookIcon /><span><strong>Author · “Secure The Future”</strong><small>Cybersecurity and web security fundamentals</small></span></div><a className="inline-cta" href="https://github.com/rohitkrchandoliya" target="_blank" rel="noreferrer">Explore my GitHub <ArrowUpRight size={16} /></a></div>
+        {/* ------------------------------- JOURNEY ----------------------------- */}
+        <section className="section alt" id="journey">
+          <SectionHead eyebrow="JOURNEY" title={<>Experience &amp; <em>education.</em></>} />
+          <div className="timeline">
+            {journeyNow.map((item, i) => (
+              <Reveal key={item.role} delay={Math.min(i * 60, 240)}>
+                <div className="timeline-item">
+                  <span className="timeline-period">{item.period}</span>
+                  <div className="timeline-body">
+                    <strong>{item.role}</strong>
+                    <p>{item.detail}</p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal delay={60}>
+            <h3 className="timeline-subhead">Earlier experience &amp; education (as listed on LinkedIn)</h3>
+          </Reveal>
+          <div className="timeline">
+            {journeyEarlier.map((item, i) => (
+              <Reveal key={item.role} delay={Math.min(i * 40, 200)}>
+                <div className="timeline-item muted">
+                  <span className="timeline-period">{item.period}</span>
+                  <div className="timeline-body">
+                    <strong>{item.role}</strong>
+                    <p>{item.detail}</p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </section>
 
-        <section className="skills-section" id="skills"><div className="section-eyebrow">CHAPTER 02 · THE TOOLKIT</div><div className="skills-heading"><h2>Things I’m <em>building with.</em></h2><p>Skills listed from my resume and GitHub profile. Depth varies by project; source code is the best evidence.</p></div><div className="skills-grid">{skills.map((skill, i) => { const Icon = skill.icon; return <div className="skill-tile" key={skill.title}><span className="skill-count">0{i + 1}</span><Icon size={23} strokeWidth={1.4} /><h3>{skill.title}</h3><p>{skill.text}</p><span className="skill-underline" /></div> })}</div><div className="tech-cloud"><span>Python</span><span>C</span><span>C++</span><span>JavaScript</span><span>TypeScript</span><span>Java</span><span>HTML</span><span>CSS</span><span>SQL</span><span>TensorFlow</span><span>Next.js</span><span>REST APIs</span><span>Supabase</span><span>Git / GitHub</span><span>n8n</span><span>AI Agents</span><span>Cybersecurity</span><span>Cloud Platforms</span><span>Web Development</span><span>Project Management</span><span>Business Development</span></div><div className="principle-line"><span><Check size={14} /> TEST THE ASSUMPTIONS</span><span><Check size={14} /> DOCUMENT THE WORK</span><span><Check size={14} /> KEEP IMPROVING</span></div></section>
-
-        <section className="mobility-section" id="mobility"><div className="mobility-copy"><span className="section-eyebrow">GLOBAL HIRING · RELOCATION</span><h2>Talent can travel.<br /><em>With the right support.</em></h2><p>I’m currently based in Jaipur, India. I’m open to discussing international opportunities where the employer can support the required work authorization and a practical relocation plan.</p><div className="country-select-wrap"><label htmlFor="country-select">EMPLOYER LOCATION</label><select id="country-select" value={country} onChange={event => setCountry(event.target.value)}>{countries.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}</select></div>
-          {country === 'india' ? <div className="mobility-details"><h3>Hiring in India</h3><ul><li>Open to relevant software engineering, AI/automation, and application-security roles.</li><li>Based in Jaipur, Rajasthan; work arrangement can be discussed for each role.</li><li>Use the contact buttons below to discuss role, location, and start date.</li></ul></div> : country === 'uae' ? <div className="mobility-details"><h3>United Arab Emirates · Relocation requirements</h3><ul><li><Check size={15} /> Open to relocating to the UAE after receiving a formal employment offer.</li><li><Check size={15} /> Employer-sponsored UAE work visa / work permit required.</li><li><Check size={15} /> Requesting employer-supported travel reimbursement or relocation allowance.</li><li><Check size={15} /> Requesting temporary accommodation / initial stay support.</li><li><Check size={15} /> Requesting guidance and support with required immigration and employment documentation.</li></ul><p className="mobility-footnote">These are requirements to discuss, not assumptions that every employer provides all benefits.</p></div> : <div className="mobility-details"><h3>Other international destinations</h3><ul><li>Interested in discussing suitable roles outside India, subject to destination-country eligibility.</li><li>Employer sponsorship for the appropriate work visa / permit is required.</li><li>Travel or relocation assistance, temporary accommodation, and immigration-documentation guidance are requested as part of a feasible relocation plan.</li><li>Visa rules, employer benefits, and eligibility vary by country and must be confirmed for the specific offer.</li></ul><p className="mobility-footnote">The UAE is the destination explicitly listed in my current resume; other destinations are subject to discussion and eligibility.</p></div>}
-          <a className="hero-play mobility-cta" href={'mailto:rohitkchandoliya@gmail.com?subject='+encodeURIComponent('International opportunity - '+countries.find(item=>item.value===country)?.label)}><Mail size={17} /> Discuss this opportunity <ArrowUpRight size={15} /></a>
-        </div><div className="mobility-visual"><div className="mobility-globe"><Globe2 size={90} strokeWidth={0.8} /></div><span className="mobility-coordinate">26.9124° N · 75.7873° E</span><span className="mobility-stamp">BASED IN INDIA<br /><b>OPEN TO DISCUSSION</b></span><div className="mobility-route"><span /><span /><span /></div></div></section>
-
-        <section className="contact-section" id="contact"><div className="contact-glow" /><div className="contact-content"><span className="section-eyebrow">THE NEXT CHAPTER IS UNWRITTEN</span><h2>Let’s make<br /><em>something matter.</em></h2><p>Available immediately for relevant AI, software engineering, automation, and cybersecurity opportunities. I’m targeting the UAE and other international roles where required work authorization and practical sponsorship/relocation support can be discussed. Please include the role location and support details.</p><div className="contact-actions"><a className="hero-play" href="mailto:rohitkchandoliya@gmail.com?subject=Opportunity%20for%20Rohit%20Kumar%20Chandoliya"><Mail size={17} /> Email me</a><a className="hero-more" href="tel:+919057604170"><Phone size={16} /> Call</a><a className="hero-more" href="https://wa.me/919057604170" target="_blank" rel="noreferrer">WhatsApp <ArrowUpRight size={15} /></a></div><div className="contact-socials"><a href="https://linkedin.com/in/rohitkrchandoliya" target="_blank" rel="noreferrer"><Linkedin size={16} /> LinkedIn</a><a href="https://github.com/rohitkrchandoliya" target="_blank" rel="noreferrer"><Github size={16} /> GitHub</a><a href="mailto:rohitkchandoliya@gmail.com"><Mail size={16} /> Email</a></div><span className="contact-note"><span className="live-dot" /> OPEN TO THE RIGHT OPPORTUNITY</span></div></section>
+        {/* ------------------------------- CONTACT ----------------------------- */}
+        <section className="section contact" id="contact">
+          <Reveal>
+            <span className="eyebrow">CONTACT</span>
+            <h2>Let&apos;s build something <em>that matters.</em></h2>
+            <p>
+              For bug bounty collaboration, security questions, book enquiries or Cheakstar —
+              the fastest way to reach me is email or LinkedIn.
+            </p>
+            <div className="hero-actions center">
+              <a className="btn btn-gold" href={`mailto:${LINKS.email}`}>
+                <Icon name="mail" /> Email me
+              </a>
+              <a className="btn btn-ghost" href={LINKS.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+              <a className="btn btn-ghost" href={LINKS.github} target="_blank" rel="noreferrer">GitHub</a>
+              <a className="btn btn-ghost" href={LINKS.instagram} target="_blank" rel="noreferrer">Instagram</a>
+              <a className="btn btn-ghost" href={LINKS.youtube} target="_blank" rel="noreferrer">YouTube</a>
+            </div>
+          </Reveal>
+        </section>
       </main>
 
-      <footer className="series-footer"><a className="series-brand" href="#home"><span className="brand-n">R<span>.</span></span><span className="brand-words">ROHIT <small>KUMAR CHANDOLIYA</small></span></a><span>JAIPUR, INDIA · © {new Date().getFullYear()}</span><div className="footer-links"><a href="https://linkedin.com/in/rohitkrchandoliya" target="_blank" rel="noreferrer">LINKEDIN</a><a href="https://github.com/rohitkrchandoliya" target="_blank" rel="noreferrer">GITHUB</a><a href="mailto:rohitkchandoliya@gmail.com">EMAIL</a><a href="#home" className="footer-top">BACK TO TOP ↑</a></div></footer>
-
-      <AnimatePresence>
-        {selected && <motion.div className="episode-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelected(null)}>
-          <motion.div className="episode-modal" role="dialog" aria-modal="true" aria-labelledby="episode-title" initial={{ opacity: 0, y: 24, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 14, scale: 0.98 }} onClick={event => event.stopPropagation()}>
-            <button className="episode-close" onClick={() => setSelected(null)} aria-label="Close project details"><X /></button>
-            <div className={'episode-modal-art poster-' + selected.palette}><span className="modal-episode">ROHIT PROJECT · EPISODE {selected.id}</span><span className="modal-big-symbol">{selected.symbol}</span><span className="modal-art-title">{selected.title}</span></div>
-            <div className="episode-modal-copy"><span className="section-eyebrow">{selected.category} · {selected.status}</span><h2 id="episode-title">{selected.title}</h2><p>{selected.detail}</p><div className="episode-tags">{selected.tags.map(tag => <span key={tag}>{tag}</span>)}</div><a className="inline-cta" href={selected.url} target="_blank" rel="noreferrer">View source repository <ExternalLink size={15} /></a><span className="modal-honesty">Project scope and current implementation are described conservatively; please refer to the repository for the latest code.</span></div>
-          </motion.div>
-        </motion.div>}
-        {showAllProjects && <motion.div className="episode-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowAllProjects(false)}>
-          <motion.div className="all-items-modal" role="dialog" aria-modal="true" aria-labelledby="all-projects-title" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }} onClick={event => event.stopPropagation()}>
-            <button className="episode-close" onClick={() => setShowAllProjects(false)} aria-label="Close all projects"><X/></button><span className="section-eyebrow">FULL PROJECT CATALOGUE</span><h2 id="all-projects-title">All <em>projects.</em></h2><div className="all-projects-grid">{projects.map(project => <a key={project.id} href={project.url} target="_blank" rel="noreferrer" className="all-project-item"><span>{project.id} / {project.category}</span><strong>{project.title}</strong><small>{project.status}</small><p>{project.synopsis}</p><b>OPEN REPOSITORY ↗</b></a>)}</div>
-          </motion.div>
-        </motion.div>}
-        {showAllExperience && <motion.div className="episode-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowAllExperience(false)}>
-          <motion.div className="all-items-modal experience-modal" role="dialog" aria-modal="true" aria-labelledby="all-experience-title" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }} onClick={event => event.stopPropagation()}>
-            <button className="episode-close" onClick={() => setShowAllExperience(false)} aria-label="Close all experience"><X/></button><span className="section-eyebrow">CAREER ARCHIVE</span><h2 id="all-experience-title">Experience &amp; <em>education.</em></h2><div className="career-list modal-career-list">
-              <div className="career-item"><span className="career-date">FOUNDER · OCTOBER 2023 — PRESENT</span><strong>CheakStar Private Limited</strong><p>Technology entrepreneurship across AI agents, automation, software development, cybersecurity, product development, client solutions and business development.</p></div>
-              <div className="career-item"><span className="career-date">APRIL 2023 — JUNE 2023 · LINKEDIN ENTRY</span><strong>Software Engineer Intern · Walmart</strong><p>Software engineering internship as listed in LinkedIn; resume contains a different Walmart title/date entry.</p></div>
-              <div className="career-item"><span className="career-date">FEBRUARY 2024 — JULY 2024 · LINKEDIN ENTRY</span><strong>IAM Developer · Tata Group</strong><p>Identity and access management development as listed in LinkedIn; resume contains different title/date wording.</p></div>
-              <div className="career-item"><span className="career-date">MAY 2024 — OCTOBER 2024</span><strong>Cyber Security Intern · JPMorgan Chase &amp; Co.</strong><p>Cybersecurity internship, United States, as listed in LinkedIn.</p></div>
-              <div className="career-item"><span className="career-date">JULY 2024 — SEPTEMBER 2024</span><strong>Investment Banking Intern · Bank of America</strong><p>Experience entry listed in LinkedIn profile.</p></div>
-              <div className="career-item"><span className="career-date">DECEMBER 2023 — MAY 2024 · RESUME ENTRY</span><strong>Software &amp; Web Developer · Tata Group</strong><p>Web applications, backend functionality, REST API integration, database work, debugging and deployment, as described in the resume.</p></div>
-              <div className="career-item"><span className="career-date">SEPTEMBER 2020 — PRESENT</span><strong>Office Associate · The Last Hope</strong><p>Role and dates as listed in LinkedIn.</p></div>
-              <div className="career-item"><span className="career-date">JULY 2022 — DECEMBER 2022</span><strong>EV Engineering · Ford Technology Services India</strong><p>Experience entry listed in LinkedIn profile.</p></div>
-              <div className="career-item"><span className="career-date">FEBRUARY 2022 — JUNE 2023</span><strong>Social Media Manager · ZEE5</strong><p>Experience entry listed in LinkedIn profile.</p></div>
-              <div className="career-item"><span className="career-date">SEPTEMBER 2025 — JULY 2026</span><strong>Event Coordinator · The CIRCLE Design Studio, UEM Jaipur</strong><p>Campus event coordination listed in LinkedIn profile.</p></div>
-              <div className="career-item"><span className="career-date">MARCH 2025 — JULY 2026</span><strong>Operations &amp; Challenge Lead · HackSec</strong><p>Cybersecurity community operations and challenge leadership listed in LinkedIn.</p></div>
-              <div className="career-item"><span className="career-date">JANUARY 2025 — JULY 2026</span><strong>Club Head · PICXL Photography Club</strong><p>Club leadership listed in LinkedIn profile.</p></div>
-              <div className="career-item"><span className="career-date">JULY 2023 — JULY 2026</span><strong>Bachelor of Computer Applications · UEM Jaipur</strong><p>Computer Science; completed July 2026 according to LinkedIn profile.</p></div>
-              <div className="career-item"><span className="career-date">JUNE 2020 — JUNE 2023</span><strong>Bachelor of Science · University of Rajasthan</strong><p>Science, as listed in LinkedIn profile.</p></div>
-              <div className="career-item"><span className="career-date">2020</span><strong>RS-CIT · Vardhman Mahaveer Open University</strong><p>Computer Information Technology, as listed in LinkedIn profile.</p></div>
-            </div>
-          </motion.div>
-        </motion.div>}
-      </AnimatePresence>
+      <footer className="footer">
+        <a className="brand" href="#home">
+          <span className="brand-mark">R<span>.</span></span>
+          <span className="brand-words">ROHIT<small>KUMAR CHANDOLIYA</small></span>
+        </a>
+        <span className="footer-mid">JAIPUR, INDIA · © {new Date().getFullYear()} ROHIT KUMAR CHANDOLIYA · CHEAKSTAR</span>
+        <div className="footer-links">
+          <a href={LINKS.linkedin} target="_blank" rel="noreferrer">LINKEDIN</a>
+          <a href={LINKS.github} target="_blank" rel="noreferrer">GITHUB</a>
+          <a href={LINKS.store} target="_blank" rel="noreferrer">BOOKSTORE</a>
+          <a href="#home">BACK TO TOP ↑</a>
+        </div>
+      </footer>
     </div>
   )
 }
-function BookIcon() { return <BookOpen size={18} /> }
+
 export default App
