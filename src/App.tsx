@@ -9,6 +9,7 @@ const LINKS = {
   instagram: 'https://www.instagram.com/rohitkrchandoliya',
   instagramChannel: 'https://www.instagram.com/byteshieldtv',
   store: 'https://payhip.com/securethefuture',
+  cheakstar: 'https://rohitkrchandoliya.github.io/cheakstar/',
   email: 'rohitkrchandoliya@gmail.com',
 }
 
@@ -17,6 +18,8 @@ type Project = {
   category: string
   status: string
   description: string
+  problem?: string
+  impact?: string
   tags: string[]
   url?: string
   flagship?: boolean
@@ -27,8 +30,12 @@ const flagshipProjects: Project[] = [
     title: 'AI Bug Hunter',
     category: 'AI · APPLICATION SECURITY',
     status: 'FLAGSHIP BUILD',
+    problem:
+      'Manual security audits are slow, and raw scanner output buries real issues under false positives. Thin evidence is why most bug reports get rejected.',
     description:
       'An automated AI security scanner that takes a target from recon and mapping through testing and verification to a detailed report — technical evidence, severity, potential impact and practical fixes, not just a list. AI triage reduces false positives and prioritises genuine issues.',
+    impact:
+      'A finding is only ever reported after verification — the same standard used on every engagement. This engine line grew into the King Edition below.',
     tags: ['Python', 'AI', 'Recon → Verify → Report'],
     flagship: true,
   },
@@ -36,8 +43,12 @@ const flagshipProjects: Project[] = [
     title: 'Bug Hunter — King Edition',
     category: 'AI · SECURITY TOOLING',
     status: 'FLAGSHIP BUILD',
+    problem:
+      'One scanner rarely fits every target — a URL, an IP, a file and a full codebase each need different engines, and the results still have to end in one report a client can act on.',
     description:
       'The King Edition of the AI Bug Hunter: modular engines for any target type — URL, IP, file, folder or codebase — with a local admin dashboard and end-to-end automated reporting, from code analysis through vulnerability verification.',
+    impact:
+      'Final build verified end-to-end: 3,097 automated tests passing, five expansion modules and CVSS v3.1 scoring. First authorised live scan completed on Cheakstar\u2019s own website (Nov 2026) — full pipeline, clean result.',
     tags: ['Python', 'Local AI (Ollama)', 'Dashboard', 'Reporting'],
     flagship: true,
   },
@@ -45,8 +56,12 @@ const flagshipProjects: Project[] = [
     title: 'CSRE — CheakStar Reverse Engineering',
     category: 'REVERSE ENGINEERING',
     status: 'DELIVERED',
+    problem:
+      'Reverse-engineering results are hard to hand over: undocumented binaries and ad-hoc notes make the work impossible for anyone else to reproduce.',
     description:
       'A reverse-engineering suite built under Cheakstar: a documented source package plus a Windows build that was executed and verified on a real machine.',
+    impact:
+      'Delivered and verified — a documented Cheakstar deliverable that runs on a real machine, not a slideware demo.',
     tags: ['Reverse Engineering', 'Windows', 'Cheakstar'],
     flagship: true,
   },
@@ -57,6 +72,8 @@ const repoProjects: Project[] = [
     title: 'AI AppSec Platform',
     category: 'APPLICATION SECURITY',
     status: 'EARLY MVP',
+    problem:
+      'Developers drown in scanner noise — hundreds of warnings, no evidence, nothing they can act on.',
     description:
       'Developer-first static checks for Python and JavaScript/TypeScript, secret-pattern detection with redacted evidence, dependency inventory, optional OSV advisory audits, CycloneDX SBOM export, risk scoring, and JSON/SARIF reports.',
     tags: ['Python', 'SAST', 'SARIF', 'SBOM'],
@@ -66,6 +83,8 @@ const repoProjects: Project[] = [
     title: 'Self Learning AI Assistant',
     category: 'AI · AUTOMATION',
     status: 'PROJECT',
+    problem:
+      'Off-the-shelf assistants forget everything between sessions and cannot be shaped around one person\u2019s work.',
     description:
       'An AI assistant built around learning, interaction, and useful task automation.',
     tags: ['Python', 'AI Assistant', 'Automation'],
@@ -75,8 +94,12 @@ const repoProjects: Project[] = [
     title: 'Autonomous YouTube Factory',
     category: 'AI · CONTENT SYSTEMS',
     status: 'IN PROGRESS',
+    problem:
+      'Publishing educational videos every day by hand does not scale — research, scripting, checks and scheduling eat the whole day.',
     description:
       'A cloud-first pipeline for research-led video and Shorts production — research collection, scheduling, a durable queue, script/storyboard models, quality gates and analytics.',
+    impact:
+      'In production for ByteShield: a new Short every day and long-form lessons twice a week across YouTube, Instagram and Facebook.',
     tags: ['Python', 'Automation', 'PostgreSQL', 'QA'],
     url: 'https://github.com/rohitkrchandoliya/autonomous-youtube-factory',
   },
@@ -84,8 +107,12 @@ const repoProjects: Project[] = [
     title: 'Certificate Automation System',
     category: 'AUTOMATION · TEAM LEAD',
     status: 'AWARD-WINNING PROJECT',
+    problem:
+      'Event certificates made by hand mean typos, delays and hours of repetitive work for organisers.',
     description:
-      'A team-led system for generating and managing digital certificates. This project achieved 2nd place at a UEM international conference.',
+      'A team-led system for generating and managing digital certificates.',
+    impact:
+      'Won 2nd place at a UEM international conference — built and presented by the team I led.',
     tags: ['Automation', 'Team Lead', 'Digital Certificates'],
     url: 'https://github.com/rohitkrchandoliya/Event-Certificates-Automation',
   },
@@ -93,6 +120,8 @@ const repoProjects: Project[] = [
     title: 'Smart-Scan: Smart Contract Analyzer',
     category: 'WEB3 · SECURITY',
     status: 'HACKATHON PROJECT',
+    problem:
+      'Smart-contract risks are invisible to non-experts until money is already lost.',
     description:
       'A Web3 security project from AceHack 4.0 focused on smart-contract and wallet analysis, with secure API-key handling.',
     tags: ['Web3', 'Security', 'API Integration'],
@@ -102,6 +131,8 @@ const repoProjects: Project[] = [
     title: 'AI Resume Analyzer & Job Matcher',
     category: 'AI · CAREER TOOLS',
     status: 'PROJECT',
+    problem:
+      'Students apply blindly — their resumes never get compared honestly against what a role actually asks for.',
     description:
       'A project focused on connecting resume information with suitable job opportunities.',
     tags: ['AI', 'Resume Analysis', 'Job Matching'],
@@ -130,6 +161,13 @@ const skills = [
     text: 'SAST · SBOM / SARIF · Burp Suite · SQL · Supabase · Git & GitHub · n8n',
     glyph: 'wrench',
   },
+]
+
+const impactStats = [
+  { value: '3,097', label: 'Automated tests passing — King Edition final build' },
+  { value: '23', label: 'Full books written and published' },
+  { value: '25', label: 'Products live in the Payhip bookstore' },
+  { value: '30', label: 'Public repositories on GitHub' },
 ]
 
 const techCloud = [
@@ -305,6 +343,15 @@ function SectionHead({ eyebrow, title, lead }: { eyebrow: string; title: ReactNo
   )
 }
 
+function PsiRow({ label, text, tone }: { label: string; text: string; tone?: string }) {
+  return (
+    <div className={`psi-row${tone ? ` ${tone}` : ''}`}>
+      <span className="psi-label">{label}</span>
+      <p>{text}</p>
+    </div>
+  )
+}
+
 function ProjectCard({ project, delay }: { project: Project; delay: number }) {
   return (
     <Reveal delay={delay}>
@@ -314,7 +361,15 @@ function ProjectCard({ project, delay }: { project: Project; delay: number }) {
           <span className={`status-pill${project.flagship ? ' gold' : ''}`}>{project.status}</span>
         </div>
         <h3>{project.title}</h3>
-        <p>{project.description}</p>
+        {project.problem || project.impact ? (
+          <div className="psi">
+            {project.problem ? <PsiRow label="Problem" text={project.problem} /> : null}
+            <PsiRow label={project.flagship ? 'Solution' : 'Build'} text={project.description} />
+            {project.impact ? <PsiRow label="Impact" text={project.impact} tone="impact" /> : null}
+          </div>
+        ) : (
+          <p>{project.description}</p>
+        )}
         <div className="tags">{project.tags.map((t) => <span key={t}>{t}</span>)}</div>
         {project.url ? (
           <a className="card-link" href={project.url} target="_blank" rel="noreferrer">
@@ -446,6 +501,9 @@ function App() {
                   <a className="btn btn-ghost" href={LINKS.store} target="_blank" rel="noreferrer">
                     <Icon name="book" /> My bookstore
                   </a>
+                  <a className="btn btn-ghost" href="#contact">
+                    <Icon name="mail" /> Get in touch
+                  </a>
                 </div>
               </Reveal>
               <Reveal delay={420}>
@@ -458,7 +516,15 @@ function App() {
             </div>
             <Reveal delay={240} className="hero-visual-wrap">
               <figure className="hero-visual">
-                <img src="images/portfolio-hero.webp" alt="Rohit Kumar Chandoliya — Founder @ Cheakstar" width={1280} height={1600} />
+                <img
+                  src="images/portfolio-hero.webp"
+                  srcSet="images/portfolio-hero-480.webp 480w, images/portfolio-hero.webp 860w"
+                  sizes="(max-width: 760px) 92vw, 430px"
+                  alt="Rohit Kumar Chandoliya — Founder @ Cheakstar"
+                  width={860}
+                  height={1075}
+                  fetchPriority="high"
+                />
                 <figcaption>
                   <span><Icon name="shield" /> Bug Bounty</span>
                   <span><Icon name="bot" /> AI Agents</span>
@@ -559,8 +625,18 @@ function App() {
           <SectionHead
             eyebrow="PROJECTS"
             title={<>Things I have <em>built.</em></>}
-            lead="The flagship security tools come first — then the public repositories. No invented metrics, no inflated claims."
+            lead="Every project is shown the same way: the problem, the solution I built, and the impact it actually had. No invented metrics, no inflated claims."
           />
+          <Reveal delay={60}>
+            <div className="impact-band" aria-label="Verified numbers">
+              {impactStats.map((s) => (
+                <div className="impact-stat" key={s.label}>
+                  <strong>{s.value}</strong>
+                  <span>{s.label}</span>
+                </div>
+              ))}
+            </div>
+          </Reveal>
           <div className="grid grid-3">
             {flagshipProjects.map((p, i) => <ProjectCard key={p.title} project={p} delay={i * 80} />)}
           </div>
@@ -580,7 +656,7 @@ function App() {
           <SectionHead
             eyebrow="BOOKS · SECURE THE FUTURE"
             title={<>Books I have <em>written.</em></>}
-            lead="Original cybersecurity books — from a beginner's first steps to honest, evidence-based bug bounty reporting. All titles are available in my Payhip store."
+            lead="The problem: students learn cybersecurity from scattered, hype-first content with no clear path. The solution: original books that take a beginner from the first steps to honest, evidence-based bug bounty reporting. All titles are available in my Payhip store."
           />
           <div className="grid grid-3">
             {trilogy.map((b, i) => <BookCard key={b.title} book={b} delay={i * 80} label="THE TRILOGY" />)}
@@ -678,6 +754,7 @@ function App() {
               For bug bounty collaboration, security questions, book enquiries or Cheakstar —
               the fastest way to reach me is email or LinkedIn.
             </p>
+            <a className="contact-email" href={`mailto:${LINKS.email}`}>{LINKS.email}</a>
             <div className="hero-actions center">
               <a className="btn btn-gold" href={`mailto:${LINKS.email}`}>
                 <Icon name="mail" /> Email me
@@ -686,6 +763,7 @@ function App() {
               <a className="btn btn-ghost" href={LINKS.github} target="_blank" rel="noreferrer">GitHub</a>
               <a className="btn btn-ghost" href={LINKS.instagram} target="_blank" rel="noreferrer">Instagram</a>
               <a className="btn btn-ghost" href={LINKS.youtube} target="_blank" rel="noreferrer">YouTube</a>
+              <a className="btn btn-ghost" href={LINKS.cheakstar} target="_blank" rel="noreferrer">Cheakstar</a>
             </div>
           </Reveal>
         </section>
@@ -698,9 +776,11 @@ function App() {
         </a>
         <span className="footer-mid">JAIPUR, INDIA · © {new Date().getFullYear()} ROHIT KUMAR CHANDOLIYA · CHEAKSTAR</span>
         <div className="footer-links">
+          <a href={`mailto:${LINKS.email}`}>EMAIL</a>
           <a href={LINKS.linkedin} target="_blank" rel="noreferrer">LINKEDIN</a>
           <a href={LINKS.github} target="_blank" rel="noreferrer">GITHUB</a>
           <a href={LINKS.store} target="_blank" rel="noreferrer">BOOKSTORE</a>
+          <a href="#contact">CONTACT</a>
           <a href="#home">BACK TO TOP ↑</a>
         </div>
       </footer>

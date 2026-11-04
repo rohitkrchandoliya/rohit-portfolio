@@ -214,6 +214,31 @@ img { max-width: 100%; display: block; }
 .card-link:hover svg { transform: translate(2px, -2px); }
 .card-note { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--muted); margin-top: 4px; }
 
+/* ------------------------- problem / solution / impact ------------------------ */
+.psi { display: flex; flex-direction: column; gap: 12px; flex: 1; }
+.psi-row .psi-label {
+  display: block; font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.24em;
+  color: var(--gold); text-transform: uppercase; margin-bottom: 3px;
+}
+.psi-row p { margin: 0; color: var(--muted); font-size: 14.8px; line-height: 1.65; }
+.psi-row.impact {
+  border-left: 2px solid var(--gold); padding-left: 12px;
+  background: rgba(212, 175, 55, 0.05); border-radius: 0 10px 10px 0; padding-block: 7px; padding-right: 10px;
+}
+.psi-row.impact p { color: var(--text); }
+
+/* ------------------------------- impact band ------------------------------- */
+.impact-band {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 34px;
+}
+.impact-stat {
+  border: 1px solid var(--line); border-radius: 16px; padding: 18px;
+  background: linear-gradient(180deg, rgba(212, 175, 55, 0.07), rgba(13, 25, 48, 0.4));
+  display: flex; flex-direction: column; gap: 4px;
+}
+.impact-stat strong { font-family: var(--serif); font-size: 32px; line-height: 1.05; color: var(--gold-bright); }
+.impact-stat span { color: var(--muted); font-size: 12.5px; line-height: 1.5; }
+
 /* ---------------------------------- about ---------------------------------- */
 .about-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: clamp(24px, 4vw, 52px); align-items: start; }
 .about-copy p { color: var(--muted); font-size: 16.5px; line-height: 1.78; margin: 0 0 18px; }
@@ -295,6 +320,13 @@ img { max-width: 100%; display: block; }
 .contact { text-align: center; }
 .contact .eyebrow { justify-content: center; }
 .contact p { color: var(--muted); font-size: 16.5px; line-height: 1.7; max-width: 620px; margin: 0 auto 28px; }
+.contact-email {
+  display: inline-block; font-family: var(--mono); font-size: clamp(15px, 3.6vw, 20px);
+  letter-spacing: 0.04em; color: var(--gold-bright); text-decoration: none;
+  border: 1px dashed var(--line); border-radius: 999px; padding: 12px 22px; margin-bottom: 26px;
+  max-width: 100%; overflow-wrap: anywhere; transition: border-color 0.25s, background 0.25s;
+}
+.contact-email:hover { border-color: var(--gold); background: rgba(212, 175, 55, 0.07); }
 
 /* ---------------------------------- footer --------------------------------- */
 .footer {
@@ -310,23 +342,26 @@ img { max-width: 100%; display: block; }
 @media (max-width: 1020px) {
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .impact-band { grid-template-columns: repeat(2, 1fr); }
   .hero-inner { grid-template-columns: 1fr; }
   .hero-visual { max-width: 430px; transform: none; justify-self: center; }
   .about-grid, .byteshield-panel { grid-template-columns: 1fr; }
 }
 @media (max-width: 760px) {
-  .menu-btn { display: grid; place-items: center; }
+  .menu-btn { display: grid; place-items: center; width: 44px; height: 44px; }
   .nav-links {
     position: absolute; top: 100%; left: 0; right: 0; display: none;
     flex-direction: column; align-items: stretch; gap: 0; padding: 10px 18px 16px;
     background: rgba(7, 13, 26, 0.97); border-bottom: 1px solid var(--line-soft);
   }
   .nav-links.is-open { display: flex; }
-  .nav-links a { padding: 11px 4px; border-bottom: 1px solid var(--line-soft); }
+  .nav-links a { padding: 13px 4px; border-bottom: 1px solid var(--line-soft); }
   .nav-links .nav-cta { text-align: center; margin-top: 10px; border-bottom: none; }
   .hero { padding-top: 122px; }
   .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .impact-band { grid-template-columns: repeat(2, 1fr); }
   .timeline-item { grid-template-columns: 1fr; gap: 5px; }
   .section { padding-block: 70px; }
   .footer { flex-direction: column; text-align: center; }
+  .footer-links { flex-wrap: wrap; justify-content: center; }
 }
